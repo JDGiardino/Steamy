@@ -21,11 +21,8 @@ def get_request(url: str, parameters=None):
 
 
 def get_game_id(game: str):
-    response = get_request(url="http://api.steampowered.com/ISteamApps/GetAppList/v0002/")
-    json_app_list = json.loads(response.text) #Load the JSON data
+    response = get_request(url="https://api.steampowered.com/ISteamApps/GetAppList/v0002/")
+    json_app_list = json.loads(response.text)  # Load the JSON data
     for x in json_app_list["applist"]["apps"]:
         if game == x['name']:
             return x['appid']
-        else:
-            error = "Game not found"
-            return error
