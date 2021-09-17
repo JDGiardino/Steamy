@@ -13,11 +13,11 @@ def get_game_id(game: str) -> int:
             return x['appid']
 
 
-def get_rarest_achivement(game_id: int) -> dict :
+def get_rarest_achievement(game_id: int) -> dict :
     response = RequestsRetryClient().request(method='GET', url=f"https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid={game_id}")
-    loaded_json = json.loads(response.text)
-    json_achivement_list = loaded_json["achievementpercentages"]["achievements"]
-    rarest_achivement = min(x["percent"] for x in json_achivement_list)
-    for x in json_achivement_list:
-        if x["percent"] == rarest_achivement:
+    loaded_json = json.loads(response.text)  #Load the JSON data into a list of dictionaries
+    json_achievement_list = loaded_json["achievementpercentages"]["achievements"]
+    rarest_achievement = min(x["percent"] for x in json_achievement_list)
+    for x in json_achievement_list:
+        if x["percent"] == rarest_achievement:
             return x

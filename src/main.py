@@ -15,12 +15,12 @@ def return_game_id():
 def main():
     request = input('What Steam request would you like to make? Options :\n '
                     'Get game ID\n '
-                    'Get rarest achivement in a game\n ')
+                    'Get rarest achievement in a game\n ')
     if request == "Get Game ID":
         print(return_game_id())
         main()
-    elif request == "Get rarest achivement in a game":
-        print(steam_api.get_rarest_achivement(return_game_id()))
+    elif request == "Get rarest achievement in a game":
+        print(steam_api.get_rarest_achievement(return_game_id()))
         main()
     else:
         print('That is not a valid request')
