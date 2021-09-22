@@ -1,15 +1,23 @@
 import steam
 from src import steam_api
 from steam.client import SteamClient
+from src.utils import formatter
 
 
-def return_game_id():
+def return_game_id() -> int:
     game = input('What game would you like to look up? ')
     game_id = steam_api.get_game_id(game)
     if game_id is None:
         print("Game not found")
     else:
         return game_id
+
+
+def return_rarest_achievement() -> str:
+    achievement = steam_api.get_rarest_achievement(return_game_id()) #This is a dict
+    achievement_name = formatter.format_achievement_name(achievement['name'])
+    achievement_percent = formatter.format_achievement_percent(achievement['percent'])
+    return f"The rarest achievement is {achievement_name} which {achievement_percent}% of players unlocked"
 
 
 def main():
@@ -20,7 +28,7 @@ def main():
         print(return_game_id())
         main()
     elif request == "Get rarest achievement in a game":
-        print(steam_api.get_rarest_achievement(return_game_id()))
+        print(return_rarest_achievement())
         main()
     else:
         print('That is not a valid request')
