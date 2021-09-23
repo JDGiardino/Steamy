@@ -358,6 +358,17 @@ secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "cer
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
+name = "valve"
+version = "0.0.0"
+description = "Great package."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+test = ["pytest", "coverage", "pytest-cov"]
+
+[[package]]
 name = "vdf"
 version = "3.4"
 description = "Library for working with Valve's VDF text format"
@@ -413,7 +424,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "33db02ba766d6367a666293b3f6ed30b4c42cc4139c1a0d0d6e626c651f2add1"
+content-hash = "fae0b965a0e443a7035330813ebb8c97d63dc7d167b0fcf211d45e3f674a8ade"
 
 [metadata.files]
 atomicwrites = [
@@ -706,6 +717,10 @@ typing-extensions = [
 urllib3 = [
     {file = "urllib3-1.26.6-py2.py3-none-any.whl", hash = "sha256:39fb8672126159acb139a7718dd10806104dec1e2f0f6c88aab05d17df10c8d4"},
     {file = "urllib3-1.26.6.tar.gz", hash = "sha256:f57b4c16c62fa2760b7e3d97c35b255512fb6b59a259730f36ba32ce9f8e342f"},
+]
+valve = [
+    {file = "valve-0.0.0-py2.py3-none-any.whl", hash = "sha256:495cabf86c20990078b2ad2a132a4ea4ff3bb4f45a85ed05aeb85e4610b3e4f4"},
+    {file = "valve-0.0.0.tar.gz", hash = "sha256:5f3653a7821439776b463cce01855a9323499b3bdd3458332c7fba952dcbb2ba"},
 ]
 vdf = [
     {file = "vdf-3.4-py2.py3-none-any.whl", hash = "sha256:68c1a125cc49e343d535af2dd25074e9cb0908c6607f073947c4a04bbe234534"},
