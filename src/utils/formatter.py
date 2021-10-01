@@ -9,14 +9,11 @@ def format_achievement_name(achievement_name: str) -> str:
     return achievement_name
 
 
-def format_achievement_percent(achievement_percent: int) -> int:
+def format_achievement_percent(achievement_percent: float) -> float:
     achievement_percent = round(achievement_percent, 2)
     return achievement_percent
 
 
-def format_users_playtime(game_playtime: dict) -> int:
-    if game_playtime is None:
-        return 0
-    else:
-        total_hours = game_playtime["playtime_forever"] / 60
-        return round(total_hours, 2)
+def format_users_playtime(game_playtime: dict) -> float:
+    total_hours = game_playtime["playtime_forever"] / 60
+    return round(total_hours, 2)

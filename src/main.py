@@ -1,14 +1,16 @@
 import steam
+from typing import Union
 from src import steam_api
 from src.utils import formatter
 from steam.steamid import SteamID
 
 
-def return_game_id() -> int:
+def return_game_id() -> Union [int,None]:
     game = input('What game would you like to look up? ')
     game_id = steam_api.get_game_id(game)
     if game_id is None:
-        return "Game not found"
+        print("Game not found")
+        main()
     else:
         return game_id
 
@@ -19,7 +21,10 @@ def return_users_playtime() -> str:
         return "User not found or has a private profile"
     else:
         game = return_game_id()
-        total_hours = formatter.format_users_playtime(steam_api.get_users_playtime(user_id, game))
+        if steam_api.get_users_playtime(user_id, game) is None:
+            total_hours = 0
+        else:
+            total_hours = formatter.format_users_playtime(steam_api.get_users_playtime(user_id, game))
         return f"{user} has a total of {total_hours} hours played!"
 
 
@@ -43,6 +48,7 @@ def main():
         main()
     elif request == "Get rarest achievement in a game":
         print(return_rarest_achievement())
+        main()
     else:
         print('That is not a valid request')
         main()
