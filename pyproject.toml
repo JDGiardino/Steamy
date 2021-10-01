@@ -12,6 +12,7 @@ steamclient = "^1.2"
 gevent = "^21.8.0"
 eventemitter = "^0.2.0"
 google = "^3.0.0"
+valve = "^0.0.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
