@@ -14,18 +14,28 @@ def return_game_id() -> Union [int,None]:
     else:
         return game_id
 
-def return_users_playtime() -> str:
+def return_users_game_playtime() -> str:
     user = input('What user would you like to look up? ')
     user_id = steam_api.get_steam_id(user)
     if user_id is None:
         return "User not found or has a private profile"
     else:
         game = return_game_id()
-        if steam_api.get_users_playtime(user_id, game) is None:
+        if steam_api.get_users_game_playtime(user_id, game) is None:
             total_hours = 0
         else:
-            total_hours = formatter.format_users_playtime(steam_api.get_users_playtime(user_id, game))
+            total_hours = formatter.format_users_game_playtime(steam_api.get_users_game_playtime(user_id, game))
         return f"{user} has a total of {total_hours} hours played!"
+
+
+def return_users_total_platime() -> str:
+    user = input('What user would you like to look up? ')
+    user_id = steam_api.get_steam_id(user)
+    if user_id is None:
+        return "User not found or has a private profile"
+    else:
+        total_playtime = formatter.format_users_total_playtime(steam_api.get_users_total_playtime(user_id))
+        return f"{user} has a grand total of {total_playtime} hours played on Steam!"
 
 
 def return_rarest_achievement() -> str:
@@ -39,12 +49,16 @@ def main():
     request = input('What Steam request would you like to make? Options :\n '
                     'Get game ID\n '
                     'Get a user\'s playtime hours on a game\n '
+                    'Get a user\'s total playtime hours on Steam\n '
                     'Get rarest achievement in a game\n ')
     if request == "Get game ID":
         print(return_game_id())
         main()
     elif request == "Get a user\'s playtime hours on a game":
-        print(return_users_playtime())
+        print(return_users_game_playtime())
+        main()
+    elif request == "Get a user\'s total playtime hours on Steam":
+        print(return_users_total_platime())
         main()
     elif request == "Get rarest achievement in a game":
         print(return_rarest_achievement())
