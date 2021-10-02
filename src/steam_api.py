@@ -34,10 +34,20 @@ def get_rarest_achievement(game_id: int) -> dict :
             return x
 
 
-def get_users_playtime(user_id: int, game_id: int) -> dict:
+def get_users_game_playtime(user_id: int, game_id: int) -> dict:
     response = RequestsRetryClient().request(method='GET', url=f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={STEAM_API_KEY}&steamid={user_id}&format=json")
     loaded_json = json.loads(response.text)  # Load the JSON data into a list of dictionaries
     playtimes = loaded_json["response"]["games"] #This errors if a user is entered with no played games.
     for x in playtimes:
         if x["appid"] == game_id:
             return x
+
+
+def get_users_total_playtime(user_id: int) -> float:
+    response = RequestsRetryClient().request(method='GET', url=f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={STEAM_API_KEY}&steamid={user_id}&format=json")
+    loaded_json = json.loads(response.text)  # Load the JSON data into a list of dictionaries
+    playtimes = loaded_json["response"]["games"]
+    total_playtime = 0
+    for x in playtimes:
+        total_playtime += x["playtime_forever"]
+    return total_playtime
