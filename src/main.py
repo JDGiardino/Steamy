@@ -11,7 +11,7 @@ DISCORD_BOT_TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
 if not DISCORD_BOT_TOKEN:
     raise Exception('No DISCORD_BOT_TOKEN provided')
 
-client = commands.Bot(command_prefix = '$')
+bot = commands.Bot(command_prefix = '$')
 
 
 def return_game_id(game: str) -> Union [int,None]:
@@ -52,23 +52,28 @@ def return_users_total_platime(user) -> str:
 
 
 def main():
-    @client.command()
+    @bot.command()
     async def game_id(ctx, arg: str):
         await ctx.send(return_game_id(arg))
-            #TO DO : add error handling
-    @client.command()
+
+    @game_id.error
+    async def game_id(ctx, error):
+        if isinstance(error, discord.ext.commands.errors.MissingRequiredArgument):
+            await ctx.send("You haven't provided a game.  Please enter a game after '$game_id'")
+
+    @bot.command()
     async def rarest_achievement(ctx, arg: str):
         await ctx.send(return_rarest_achievement(arg))
 
-    @client.command()
+    @bot.command()
     async def users_game_playtime(ctx, arg1: str, arg2: str):
         await ctx.send(return_users_game_playtime(arg1, arg2))
 
-    @client.command()
+    @bot.command()
     async def users_total_playtime(ctx, arg:str):
         await ctx.send(return_users_total_platime(arg))
 
-    client.run(DISCORD_BOT_TOKEN)
+    bot.run(DISCORD_BOT_TOKEN)
 
 
 if __name__ == "__main__":
