@@ -23,14 +23,14 @@ bot = commands.Bot(command_prefix = '$')
 def return_game_id(game: str) -> int:
     game_id = steam_api.get_game_id(game)
     if game_id is None:
-        raise GameIsNoneError('Game not found or was spelt incorrectly.')
+        raise GameIsNoneError("Game not found or was spelt incorrectly.")
     else:
         return game_id
 
 def return_user_id(user: str) -> str:
     user_id = steam_api.get_steam_id(user)
     if user_id is None:
-        raise UserIsNoneError('User not found or has a private profile.')
+        raise UserIsNoneError("User not found or has a private profile.")
     else:
         return user_id
 
@@ -102,11 +102,15 @@ def main():
     @bot.event
     async def on_command_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('You did not include an argument with the command')
-        elif isinstance(error, commands.CommandNotFound):
-            await ctx.send('This command was not found.  Please make sure your command is valid')
-        #else:
-            #await ctx.send('There was an error.  Please make sure your input is valid')
+            await ctx.send("Opps! You didn't include an argument with the command")
+        if isinstance(error, commands.CommandNotFound):
+            await ctx.send("This command was not found.  Please make sure your command is valid")
+        elif isinstance(error, commands.MissingPermissions):
+            await ctx.send("You do not have the appropriate permissions to run this command.")
+        elif isinstance(error, commands.BotMissingPermissions):
+            await ctx.send("I don't have sufficient permissions!")
+        else:
+            await ctx.send(f"Ran into an error \"{error}\"  This is unexpected, please report this to the bot creator")
 
     bot.run(DISCORD_BOT_TOKEN)
 
