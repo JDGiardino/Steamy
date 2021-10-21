@@ -13,7 +13,7 @@ if not DISCORD_BOT_TOKEN:
     raise Exception('No DISCORD_BOT_TOKEN provided')
 
 bot = commands.Bot(command_prefix = '$')
-bot.remove_command('help') #removes discord's build in help command
+bot.remove_command('help') #Removes discord's build in help command so we can create a custom one
 
 
 def return_game_id(game: str) -> int:
@@ -70,8 +70,6 @@ def main():
                               description="Below are the exact Steamy commands you can use in-channel :",
                               color = discord.Colour.blue())
         embed.set_thumbnail(url="https://imgur.com/KtPxVZS.jpeg")
-        embed.add_field(name='$game_id "GAME NAME"', value='Prints the ID for a given game', inline=True)
-        embed.add_field(name='$user_id "USER NAME"', value='Prints the ID for a given user', inline=True)
         embed.add_field(name='$rarest_achievement "GAME NAME"', value='Prints the least unlocked achievement for a given game', inline=False)
         embed.add_field(name='$users_game_playtime "USER NAME" "GAME NAME"', value='Prints a given user\'s played hours on a given game', inline=False)
         embed.add_field(name='$users_total_playtime "USER NAME"', value='Prints a given user\'s total played hours on Steam', inline=False)
