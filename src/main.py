@@ -2,16 +2,11 @@ import steam
 import discord
 from discord.ext import commands
 import os
+from src.exceptions import GameIsNoneError, UserIsNoneError
 from typing import Union
 from src import steam_api
 from src.utils import formatter
 from steam.steamid import SteamID
-
-class GameIsNoneError(Exception):
-    """Raised when a string called game is passed that cannot be found by Steam API."""
-
-class UserIsNoneError(Exception):
-    """Raised when a string called user is passed that cannot be found by Steam API."""
 
 DISCORD_BOT_TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
 if not DISCORD_BOT_TOKEN:
@@ -55,7 +50,10 @@ def return_users_game_playtime(user: str, game: str) -> str:
 
 def return_users_total_platime(user) -> str:
     user_id = return_user_id(user)
-    total_playtime = formatter.format_users_total_playtime(steam_api.get_users_total_playtime(user_id))
+    if steam_api.get_users_total_playtime(user_id) is None:
+        total_playtime = 0
+    else:
+        total_playtime = formatter.format_users_total_playtime(steam_api.get_users_total_playtime(user_id))
     return f"{user} has a grand total of {total_playtime} hours played on Steam!"
 
 
@@ -103,7 +101,7 @@ def main():
     async def on_command_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send("Opps! You didn't include an argument with the command")
-        if isinstance(error, commands.CommandNotFound):
+        elif isinstance(error, commands.CommandNotFound):
             await ctx.send("This command was not found.  Please make sure your command is valid")
         elif isinstance(error, commands.MissingPermissions):
             await ctx.send("You do not have the appropriate permissions to run this command.")
