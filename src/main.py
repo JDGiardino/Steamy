@@ -13,6 +13,7 @@ if not DISCORD_BOT_TOKEN:
     raise Exception('No DISCORD_BOT_TOKEN provided')
 
 bot = commands.Bot(command_prefix = '$')
+bot.remove_command('help') #Removes discord's build in help command so we can create a custom one
 
 
 def return_game_id(game: str) -> int:
@@ -63,34 +64,57 @@ def return_game_player_count(game: str) -> str:
 
 def main():
     @bot.command()
+    async def help(ctx):
+        embed = discord.Embed(title="Steamy Commands",
+                              url="https://github.com/JDGiardino/Steamy/blob/main/README.md",
+                              description="Below are the exact Steamy commands you can use in-channel :",
+                              color = discord.Colour.blue())
+        embed.set_thumbnail(url="https://imgur.com/KtPxVZS.jpeg")
+        embed.add_field(name='$rarest_achievement "GAME NAME"', value='Prints the least unlocked achievement for a given game', inline=False)
+        embed.add_field(name='$users_game_playtime "USER NAME" "GAME NAME"', value='Prints a given user\'s played hours on a given game', inline=False)
+        embed.add_field(name='$users_total_playtime "USER NAME"', value='Prints a given user\'s total played hours on Steam', inline=False)
+        await ctx.message.author.send(embed=embed)
+        await ctx.send('Guide on commands for Steamy has been sent to you in a private message.')
+
+    @bot.command(
+        name = "game_id", description = "Prints the ID for a given game"
+    )
     async def game_id(ctx, arg: str):
         try:
             await ctx.send(return_game_id(arg))
         except GameIsNoneError as exc:
             await ctx.send(exc)
 
-    @bot.command()
+    @bot.command(
+        name = "user_id", description = "Prints the ID for a given user"
+    )
     async def user_id(ctx, arg: str):
         try:
             await ctx.send(return_user_id(arg))
         except UserIsNoneError as exc:
             await ctx.send(exc)
 
-    @bot.command()
+    @bot.command(
+        name = "rarest_achievement", description = "Prints the least unlocked achievement for a given game"
+    )
     async def rarest_achievement(ctx, arg: str):
         try:
             await ctx.send(return_rarest_achievement(arg))
         except GameIsNoneError as exc:
             await ctx.send(exc)
 
-    @bot.command()
+    @bot.command(
+        name = "users_game_playtime", description = "Prints a given user's played hours on a given game"
+    )
     async def users_game_playtime(ctx, arg1: str, arg2: str):
         try:
             await ctx.send(return_users_game_playtime(arg1, arg2))
         except (GameIsNoneError, UserIsNoneError) as exc:
             await ctx.send(exc)
 
-    @bot.command()
+    @bot.command(
+        name = "users_total_playtime", description = "Prints a given user's total played hours on Steam"
+    )
     async def users_total_playtime(ctx, arg: str):
         try:
             await ctx.send(return_users_total_platime(arg))
