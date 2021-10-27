@@ -57,3 +57,11 @@ def get_users_total_playtime(user_id: int) -> float:
             total_playtime += x["playtime_forever"]
         return total_playtime
 
+
+def get_game_player_count(game_id: int) -> int:
+    response = RequestsRetryClient().request(method='GET', url=f"https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?format=json&appid={game_id}")
+    loaded_json = json.loads(response.text)
+    player_count = loaded_json["response"]["player_count"]
+    return player_count
+
+

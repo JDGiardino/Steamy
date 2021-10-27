@@ -16,9 +16,13 @@ def format_achievement_percent(achievement_percent: float) -> float:
 
 def format_users_game_playtime(game_playtime: dict) -> float:
     total_hours = game_playtime["playtime_forever"] / 60
-    return round(total_hours, 2)
+    return format_numbers_with_comma(round(total_hours, 2))
 
 
 def format_users_total_playtime(total_playime: int) -> float:
     total_hours = total_playime / 60
-    return round(total_hours, 2)
+    return format_numbers_with_comma(round(total_hours, 2))
+
+def format_numbers_with_comma(number: int) -> int:
+    formatted_number = "{:,}".format(number)
+    return formatted_number

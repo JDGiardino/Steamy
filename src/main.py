@@ -60,6 +60,8 @@ def return_users_total_platime(user) -> str:
 
 def return_game_player_count(game: str) -> str:
     game_id = return_game_id(game)
+    player_count = formatter.format_numbers_with_comma(steam_api.get_game_player_count(game_id))
+    return f"{game} has a current player count of {player_count}"
 
 
 def main():
@@ -73,8 +75,9 @@ def main():
         embed.add_field(name='$rarest_achievement "GAME NAME"', value='Prints the least unlocked achievement for a given game', inline=False)
         embed.add_field(name='$users_game_playtime "USER NAME" "GAME NAME"', value='Prints a given user\'s played hours on a given game', inline=False)
         embed.add_field(name='$users_total_playtime "USER NAME"', value='Prints a given user\'s total played hours on Steam', inline=False)
+        embed.add_field(name='$game_player_count "GAME NAME"', value='Prints the current player count for a given game', inline=False)
         await ctx.message.author.send(embed=embed)
-        await ctx.send('Guide on commands for Steamy has been sent to you in a private message.')
+        await ctx.send('A guide on commands for Steamy has been sent to you in a private message.')
 
     @bot.command(
         name = "game_id", description = "Prints the ID for a given game"
@@ -119,6 +122,15 @@ def main():
         try:
             await ctx.send(return_users_total_platime(arg))
         except (GameIsNoneError, UserIsNoneError) as exc:
+            await ctx.send(exc)
+
+    @bot.command(
+        name = "game_player_count", description = "Prints the current player count for a given game"
+    )
+    async def game_player_count(ctx, arg: str):
+        try:
+            await ctx.send(return_game_player_count(arg))
+        except (GameIsNoneError) as exc:
             await ctx.send(exc)
 
     @bot.event
