@@ -2,6 +2,6 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class Achievement:
+class AchievementPercent:
     name: str
     percent: float
