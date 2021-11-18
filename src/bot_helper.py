@@ -1,6 +1,7 @@
 from src.exceptions import GameIsNoneError, UserIsNoneError
 from src import steam_api
 from src.utils import formatter
+from src.models.RarestAchievementStrings import RarestAchievementStrings
 
 
 def get_game_id(game_name: str) -> int:
@@ -19,18 +20,17 @@ def get_user_id(user: str) -> int:
         return user_id
 
 
-def rarest_achievement_desc(game_name: str) -> tuple[str, str, str, str]: #maybe we return a data class instead of multiple things
+def rarest_achievement_desc(game_name: str) -> RarestAchievementStrings:
     game_id = get_game_id(game_name)
-    rarest_achievement = steam_api.get_rarest_achievement(game_id)
-    achievement_details = steam_api.get_achievement_details(rarest_achievement.name, game_id)
-    achievement_name = achievement_details.displayName
+    achievement_percent = steam_api.get_achievement_percent(game_id)
+    achievement_details = steam_api.get_achievement_details(achievement_percent.name, game_id)
+    name = achievement_details.displayName
     achievement_description = achievement_details.description
-    achievement_percent = formatter.format_achievement_percent(rarest_achievement.percent)
-    x = f"The rarest achievement in {game_name} is {achievement_name} which {achievement_percent}% of players unlocked"
-    y = f"The achievement description is \"{achievement_description}\""
-    z = achievement_details.icon
-    # rename these variables
-    return achievement_name, x, y, z  # Maybe return a data class
+    percent = formatter.format_achievement_percent(achievement_percent.percent)
+    icon = achievement_details.icon
+    achievement = f"The rarest achievement in {game_name} is {name} which {percent}% of players unlocked "
+    description = f"The achievement description is \"{achievement_description}\""
+    return RarestAchievementStrings(name=name, achievement=achievement, description=description, icon=icon)
 
 
 def users_game_playtime_desc(user: str, game_name: str) -> str:

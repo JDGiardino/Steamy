@@ -55,11 +55,12 @@ def main():
         name="rarest_achievement", description="Prints the least unlocked achievement for a given game"
     )
     async def rarest_achievement(ctx, arg: str):
-        achievement_name, x, y, z = bot_helper.rarest_achievement_desc(arg)
-        embed = discord.Embed(title=f"{achievement_name}",
-                              description=f"{x}\n\n{y}",
+        rarest_achievement_strings = bot_helper.rarest_achievement_desc(arg)
+        embed = discord.Embed(title=f"{rarest_achievement_strings.name}",
+                              description=f"{rarest_achievement_strings.achievement}\n\n"
+                                          f"{rarest_achievement_strings.description}",
                               color=discord.Colour.blue())
-        embed.set_thumbnail(url=f"{z}")
+        embed.set_thumbnail(url=f"{rarest_achievement_strings.icon}")
         try:
             await ctx.send(embed=embed)
         except GameIsNoneError as exc:

@@ -3,11 +3,11 @@ import json
 import os
 
 from typing import Union
-from AchievementPercent import AchievementPercent
-from AchievementDetails import AchievementDetails
-from Game import Game
-from Players import Players
-from Playtime import Playtime
+from src.models.AchievementPercent import AchievementPercent
+from src.models.AchievementDetails import AchievementDetails
+from src.models.Game import Game
+from src.models.Players import Players
+from src.models.Playtime import Playtime
 from src.utils.requests_retry_client import RequestsRetryClient
 from steam.steamid import SteamID
 
@@ -37,7 +37,7 @@ def get_game(game_name: str) -> Game:
             return Game(**x)
 
 
-def get_rarest_achievement(game_id: int) -> AchievementPercent:
+def get_achievement_percent(game_id: int) -> AchievementPercent:
     response = RequestsRetryClient().request(method='GET',
                                              url=f"https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid={game_id}")
     loaded_json = json.loads(response.text)
