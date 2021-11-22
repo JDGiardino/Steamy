@@ -1,9 +1,10 @@
 import discord
 from discord.ext import commands
 import os
+
+import bot_helper
 from src.exceptions import GameIsNoneError, UserIsNoneError
 from src import steam_api
-from src.utils import formatter
 
 DISCORD_BOT_TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
 if not DISCORD_BOT_TOKEN:
@@ -13,58 +14,7 @@ bot = commands.Bot(command_prefix='$')
 bot.remove_command('help')  # Removes discord's build in help command so we can create a custom one
 
 
-def return_game_id(game_name: str) -> int:
-    game = steam_api.get_game_id(game_name)
-    if game is None:
-        raise GameIsNoneError("Game not found or was spelled incorrectly.")
-    else:
-        return game.appid
-
-
-def return_user_id(user: str) -> int:
-    user_id = steam_api.get_steam_id(user)
-    if user_id is None:
-        raise UserIsNoneError("User not found or has a private profile.")
-    else:
-        return user_id
-
-
-def return_rarest_achievement(game: str) -> str:
-    game_id = return_game_id(game)
-    achievement = steam_api.get_rarest_achievement(game_id)
-    achievement_name = formatter.format_achievement_name(achievement.name)
-    achievement_percent = formatter.format_achievement_percent(achievement.percent)
-    return f"The rarest achievement is {achievement_name} which {achievement_percent}% of players unlocked"
-
-
-def return_users_game_playtime(user: str, game: str) -> str:
-    user_id = return_user_id(user)
-    game_id = return_game_id(game)
-    if steam_api.get_users_game_playtime(user_id, game_id) is None:
-        total_hours = 0
-    else:
-        users_game_playtime = steam_api.get_users_game_playtime(user_id, game_id)
-        total_hours = formatter.format_users_game_playtime(users_game_playtime.playtime_forever)
-    return f"{user} has a total of {total_hours} hours played on {game}!"
-
-
-def return_users_total_playtime(user) -> str:
-    user_id = return_user_id(user)
-    if steam_api.get_users_total_playtime(user_id) is None:
-        total_playtime = 0
-    else:
-        total_playtime = formatter.format_users_total_playtime(steam_api.get_users_total_playtime(user_id))
-    return f"{user} has a grand total of {total_playtime} hours played on Steam!"
-
-
-def return_game_player_count(game: str) -> str:  # return in the function name isn't really great
-    game_id = return_game_id(game)
-    players = steam_api.get_game_player_count(game_id)
-    player_count = formatter.format_numbers_with_comma(players.player_count)
-    return f"{game} has a current player count of {player_count}"
-
-
-def main():  # [TO DO] See if bot commands can be moved to a different module.  OR make a new file "bot helpers" and all the functions the bot calls are in 1 file.  Make main smaller
+def main():
     @bot.command()
     async def help(ctx):
         embed = discord.Embed(title="Steamy Commands",
@@ -88,7 +38,7 @@ def main():  # [TO DO] See if bot commands can be moved to a different module.  
     )
     async def game_id(ctx, arg: str):
         try:
-            await ctx.send(return_game_id(arg))
+            await ctx.send(bot_helper.get_game_id(arg))
         except GameIsNoneError as exc:
             await ctx.send(exc)
 
@@ -97,7 +47,7 @@ def main():  # [TO DO] See if bot commands can be moved to a different module.  
     )
     async def user_id(ctx, arg: str):
         try:
-            await ctx.send(return_user_id(arg))
+            await ctx.send(bot_helper.get_user_id(arg))
         except UserIsNoneError as exc:
             await ctx.send(exc)
 
@@ -105,8 +55,14 @@ def main():  # [TO DO] See if bot commands can be moved to a different module.  
         name="rarest_achievement", description="Prints the least unlocked achievement for a given game"
     )
     async def rarest_achievement(ctx, arg: str):
+        rarest_achievement_strings = bot_helper.rarest_achievement_desc(arg)
+        embed = discord.Embed(title=f"{rarest_achievement_strings.name}",
+                              description=f"{rarest_achievement_strings.achievement}\n\n"
+                                          f"{rarest_achievement_strings.description}",
+                              color=discord.Colour.blue())
+        embed.set_thumbnail(url=f"{rarest_achievement_strings.icon}")
         try:
-            await ctx.send(return_rarest_achievement(arg))
+            await ctx.send(embed=embed)
         except GameIsNoneError as exc:
             await ctx.send(exc)
 
@@ -115,8 +71,8 @@ def main():  # [TO DO] See if bot commands can be moved to a different module.  
     )
     async def users_game_playtime(ctx, arg1: str, arg2: str):
         try:
-            await ctx.send(return_users_game_playtime(arg1, arg2))
-        except (GameIsNoneError, UserIsNoneError) as exc:
+            await ctx.send(bot_helper.users_game_playtime_desc(arg1, arg2))
+        except GameIsNoneError as exc:
             await ctx.send(exc)
 
     @bot.command(
@@ -124,7 +80,7 @@ def main():  # [TO DO] See if bot commands can be moved to a different module.  
     )
     async def users_total_playtime(ctx, arg: str):
         try:
-            await ctx.send(return_users_total_playtime(arg))
+            await ctx.send(bot_helper.users_total_playtime_desc(arg))
         except (GameIsNoneError, UserIsNoneError) as exc:
             await ctx.send(exc)
 
@@ -133,7 +89,7 @@ def main():  # [TO DO] See if bot commands can be moved to a different module.  
     )
     async def game_player_count(ctx, arg: str):
         try:
-            await ctx.send(return_game_player_count(arg))
+            await ctx.send(bot_helper.game_player_count_desc(arg))
         except GameIsNoneError as exc:
             await ctx.send(exc)
 
@@ -157,5 +113,5 @@ def main():  # [TO DO] See if bot commands can be moved to a different module.  
     bot.run(DISCORD_BOT_TOKEN)
 
 
-if __name__ == "__main__":  # this could be in a bot helper module
+if __name__ == "__main__":
     main()
