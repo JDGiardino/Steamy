@@ -42,8 +42,11 @@ def users_game_playtime_desc(user: str, game_name: str) -> Playtime:
     else:
         playtime = steam_api.get_game_playtimes(user_id, game_id)
         total_hours = formatter.format_users_game_playtime(playtime.playtime_forever)
-    description = f"{user} has a total of {total_hours} hours played on {game_name}!"
     icon = steam_api.get_game_icon(game_id)
+    game_url = f"https://store.steampowered.com/app/{game_id}"
+    user_url = f"https://steamcommunity.com/id/{user}"
+    description = f"[{user}]({user_url}) has a total of {total_hours} hours played on [{game_name}]({game_url})!"
+    # This uses special Discord syntax to make user and game_name into a clickable URL.  [notation_here](link_here)
     return Playtime(name=game_name, description=description, icon=icon)
 
 
