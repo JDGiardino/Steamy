@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class RarestAchievementStrings:
+class RarestAchievement:
     name: str
     achievement: str
     description: str

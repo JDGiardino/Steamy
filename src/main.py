@@ -70,8 +70,13 @@ def main():
         name="users_game_playtime", description="Prints a given user's played hours on a given game"
     )
     async def users_game_playtime(ctx, arg1: str, arg2: str):
+        playtime = bot_helper.users_game_playtime_desc(arg1, arg2)
+        embed = discord.Embed(title=f"{playtime.name}",
+                              description=f"{playtime.description}",
+                              color=discord.Colour.blue())
+        embed.set_thumbnail(url=f"{playtime.icon}")
         try:
-            await ctx.send(bot_helper.users_game_playtime_desc(arg1, arg2))
+            await ctx.send(embed=embed)
         except GameIsNoneError as exc:
             await ctx.send(exc)
 

@@ -7,7 +7,7 @@ from src.models.AchievementPercent import AchievementPercent
 from src.models.AchievementDetails import AchievementDetails
 from src.models.Game import Game
 from src.models.Players import Players
-from src.models.Playtime import Playtime
+from src.models.GamePlaytimes import GamePlaytimes
 from src.utils.requests_retry_client import RequestsRetryClient
 from steam.steamid import SteamID
 
@@ -58,7 +58,7 @@ def get_achievement_details(achievement_name: str, game_id: int) -> AchievementD
             return AchievementDetails(**x)
 
 
-def get_playtime(user_id: int, game_id: int) -> Union[None, Playtime]:
+def get_game_playtimes(user_id: int, game_id: int) -> Union[None, GamePlaytimes]:
     response = RequestsRetryClient().request(method='GET',
                                              url=f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={STEAM_API_KEY}&steamid={user_id}&format=json")
     loaded_json = json.loads(response.text)
@@ -68,7 +68,11 @@ def get_playtime(user_id: int, game_id: int) -> Union[None, Playtime]:
     else:
         for x in playtime:
             if x["appid"] == game_id:
-                return Playtime(**x)
+                return GamePlaytimes(**x)
+
+
+def get_game_icon(game_id: int) -> str:
+    return f"https://steamcdn-a.akamaihd.net/steam/apps/{game_id}/header.jpg"
 
 
 def get_users_total_playtime(user_id: int) -> Union[None, float]:
