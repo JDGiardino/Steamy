@@ -24,8 +24,8 @@ def main():
         embed.set_thumbnail(url="https://imgur.com/KtPxVZS.jpeg")
         embed.add_field(name='$rarest_achievement "GAME NAME"',
                         value='Prints the least unlocked achievement for a given game', inline=False)
-        embed.add_field(name='$users_game_playtime "USER NAME" "GAME NAME"',
-                        value='Prints a given user\'s played hours on a given game', inline=False)
+        embed.add_field(name='$users_game_stats "USER NAME" "GAME NAME"',
+                        value='Prints a given user\'s stats on a given game', inline=False)
         embed.add_field(name='$users_total_playtime "USER NAME"',
                         value='Prints a given user\'s total played hours on Steam', inline=False)
         embed.add_field(name='$game_player_count "GAME NAME"',
@@ -67,12 +67,13 @@ def main():
             await ctx.send(exc)
 
     @bot.command(
-        name="users_game_playtime", description="Prints a given user's played hours on a given game"
+        name="users_game_stats", description="Prints a given user's stats on a given game"
     )
-    async def users_game_playtime(ctx, arg1: str, arg2: str):
-        playtime = bot_helper.users_game_playtime_desc(arg1, arg2)
+    async def users_game_stats(ctx, arg1: str, arg2: str):
+        playtime = bot_helper.users_game_stats(arg1, arg2)
         embed = discord.Embed(title=f"{playtime.name}",
-                              description=f"{playtime.description}",
+                              description=f"{playtime.description1}\n\n"
+                                          f"{playtime.description2}",
                               color=discord.Colour.blue())
         embed.set_thumbnail(url=f"{playtime.icon}")
         try:

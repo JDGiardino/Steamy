@@ -2,7 +2,7 @@ from src.exceptions import GameIsNoneError, UserIsNoneError
 from src import steam_api
 from src.utils import formatter
 from src.models.RarestAchievement import RarestAchievement
-from src.models.Playtime import Playtime
+from src.models.Stats import Stats
 
 
 def get_game_id(game_name: str) -> int:
@@ -34,7 +34,7 @@ def rarest_achievement_desc(game_name: str) -> RarestAchievement:
     return RarestAchievement(name=name, achievement=achievement, description=description, icon=icon)
 
 
-def users_game_playtime_desc(user: str, game_name: str) -> Playtime:
+def users_game_stats(user: str, game_name: str) -> Stats:
     user_id = get_user_id(user)
     game_id = get_game_id(game_name)
     if steam_api.get_game_playtimes(user_id, game_id) is None:
@@ -45,9 +45,12 @@ def users_game_playtime_desc(user: str, game_name: str) -> Playtime:
     icon = steam_api.get_game_icon(game_id)
     game_url = f"https://store.steampowered.com/app/{game_id}"
     user_url = f"https://steamcommunity.com/id/{user}"
-    description = f"[{user}]({user_url}) has a total of {total_hours} hours played on [{game_name}]({game_url})!"
+    achievements_url = f"https://steamcommunity.com/id/{user}/stats/{game_id}/achievements/"
+    description1 = f"[{user}]({user_url}) has a total of {total_hours} hours played on [{game_name}]({game_url})!"
     # This uses special Discord syntax to make user and game_name into a clickable URL.  [notation_here](link_here)
-    return Playtime(name=game_name, description=description, icon=icon)
+    player_achievements = steam_api.get_player_achievements(user_id, game_id)
+    description2 = f"{user} has unlocked [{player_achievements.unlocked}/{player_achievements.total} achievements]({achievements_url})!"
+    return Stats(name=game_name, description1=description1, description2=description2, icon=icon)
 
 
 def users_total_playtime_desc(user) -> str:
