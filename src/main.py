@@ -22,21 +22,22 @@ def main():
                               description="Below are the exact Steamy commands you can use in-channel :",
                               color=discord.Colour.blue())
         embed.set_thumbnail(url="https://imgur.com/KtPxVZS.jpeg")
-        embed.add_field(name='$rarest_achievement "GAME NAME"',
+        embed.add_field(name='$achievement GAME NAME',
                         value='Prints the least unlocked achievement for a given game', inline=False)
-        embed.add_field(name='$users_game_playtime "USER NAME" "GAME NAME"',
-                        value='Prints a given user\'s played hours on a given game', inline=False)
-        embed.add_field(name='$users_total_playtime "USER NAME"',
+        embed.add_field(name='$user USER NAME',
                         value='Prints a given user\'s total played hours on Steam', inline=False)
-        embed.add_field(name='$game_player_count "GAME NAME"',
+        embed.add_field(name='$game GAME NAME',
                         value='Prints the current player count for a given game', inline=False)
+        embed.add_field(name='$users_game_stats "USER NAME" "GAME NAME"',
+                        value='Prints a given user\'s stats on a given game.  \nNOTE: Quotes around the user name '
+                              'and game name are required', inline=False)
         await ctx.message.author.send(embed=embed)
         await ctx.send('A guide on commands for Steamy has been sent to you in a private message.')
 
     @bot.command(
         name="game_id", description="Prints the ID for a given game"
     )
-    async def game_id(ctx, arg: str):
+    async def game_id(ctx, *, arg: str):
         try:
             await ctx.send(bot_helper.get_game_id(arg))
         except GameIsNoneError as exc:
@@ -54,7 +55,7 @@ def main():
     @bot.command(
         name="rarest_achievement", description="Prints the least unlocked achievement for a given game"
     )
-    async def rarest_achievement(ctx, arg: str):
+    async def achievement(ctx, *, arg: str):
         rarest_achievement_strings = bot_helper.rarest_achievement_desc(arg)
         embed = discord.Embed(title=f"{rarest_achievement_strings.name}",
                               description=f"{rarest_achievement_strings.achievement}\n\n"
@@ -67,35 +68,49 @@ def main():
             await ctx.send(exc)
 
     @bot.command(
-        name="users_game_playtime", description="Prints a given user's played hours on a given game"
+        name="users_game_stats", description="Prints a given user's stats on a given game"
     )
-    async def users_game_playtime(ctx, arg1: str, arg2: str):
+    async def users_game_stats(ctx, arg1: str, arg2: str):
+        stats = bot_helper.users_game_stats(arg1, arg2)
+        embed = discord.Embed(title=f"{stats.name}",
+                              description=f"{stats.description1}\n\n"
+                                          f"{stats.description2}",
+                              color=discord.Colour.blue())
+        embed.set_thumbnail(url=f"{stats.icon}")
         try:
-            await ctx.send(bot_helper.users_game_playtime_desc(arg1, arg2))
+            await ctx.send(embed=embed)
         except GameIsNoneError as exc:
             await ctx.send(exc)
 
     @bot.command(
-        name="users_total_playtime", description="Prints a given user's total played hours on Steam"
+        name="user", description="Prints a given user's total played hours on Steam"
     )
-    async def users_total_playtime(ctx, arg: str):
+    async def user(ctx, *, arg: str):
+        stats = bot_helper.users_stats(arg)
+        embed = discord.Embed(title=f"{stats.name}",
+                              description=f"{stats.description1}\n\n"
+                                          f"{stats.description2}",
+                              color=discord.Colour.blue())
+        embed.set_thumbnail(url=f"{stats.icon}")
         try:
-            await ctx.send(bot_helper.users_total_playtime_desc(arg))
+            await ctx.send(embed=embed)
         except (GameIsNoneError, UserIsNoneError) as exc:
             await ctx.send(exc)
 
     @bot.command(
-        name="game_player_count", description="Prints the current player count for a given game"
+        name="game", description="Prints the current player count for a given game"
     )
-    async def game_player_count(ctx, arg: str):
+    async def game(ctx, *, arg: str):
+        stats = bot_helper.game_desc(arg)
+        embed = discord.Embed(title=f"{stats.name}",
+                              description=f"{stats.description1}\n\n"
+                                          f"{stats.description2}",
+                              color=discord.Colour.blue())
+        embed.set_thumbnail(url=f"{stats.icon}")
         try:
-            await ctx.send(bot_helper.game_player_count_desc(arg))
+            await ctx.send(embed=embed)
         except GameIsNoneError as exc:
             await ctx.send(exc)
-
-    @bot.command()
-    async def all_game_player_count(ctx):
-        await ctx.send(steam_api.get_all_game_player_counts())
 
     @bot.event
     async def on_command_error(ctx, error):

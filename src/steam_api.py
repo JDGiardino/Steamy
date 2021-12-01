@@ -5,9 +5,12 @@ import os
 from typing import Union
 from src.models.AchievementPercent import AchievementPercent
 from src.models.AchievementDetails import AchievementDetails
+from src.models.PlayerAchievements import PlayerAchievements
+from src.models.PlayerSummary import PlayerSummary
 from src.models.Game import Game
 from src.models.Players import Players
 from src.models.Playtime import Playtime
+from src.models.GameDetails import GameDetails
 from src.utils.requests_retry_client import RequestsRetryClient
 from steam.steamid import SteamID
 
@@ -58,7 +61,7 @@ def get_achievement_details(achievement_name: str, game_id: int) -> AchievementD
             return AchievementDetails(**x)
 
 
-def get_playtime(user_id: int, game_id: int) -> Union[None, Playtime]:
+def get_game_playtimes(user_id: int, game_id: int) -> Union[None, Playtime]:
     response = RequestsRetryClient().request(method='GET',
                                              url=f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={STEAM_API_KEY}&steamid={user_id}&format=json")
     loaded_json = json.loads(response.text)
@@ -69,6 +72,24 @@ def get_playtime(user_id: int, game_id: int) -> Union[None, Playtime]:
         for x in playtime:
             if x["appid"] == game_id:
                 return Playtime(**x)
+
+
+def get_game_icon(game_id: int) -> str:
+    return f"https://steamcdn-a.akamaihd.net/steam/apps/{game_id}/header.jpg"
+
+
+def get_player_achievements(user_id: int, game_id: int) -> PlayerAchievements:
+    response = RequestsRetryClient().request(method='GET',
+                                             url=f"https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key={STEAM_API_KEY}&appid={game_id}&steamid={user_id}")
+    loaded_json = json.loads(response.text)
+    achievements = loaded_json["playerstats"]["achievements"]
+    unlocked = 0
+    total = 0
+    for x in achievements:
+        if x["achieved"] == 1:
+            unlocked += 1
+        total += 1
+    return PlayerAchievements(unlocked=unlocked, total=total,)
 
 
 def get_users_total_playtime(user_id: int) -> Union[None, float]:
@@ -85,6 +106,14 @@ def get_users_total_playtime(user_id: int) -> Union[None, float]:
         return total_playtime
 
 
+def get_player_summaries(user_id: int) -> PlayerSummary:
+    response = RequestsRetryClient().request(method='GET',
+                                             url=f"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={STEAM_API_KEY}&steamids={user_id}")
+    loaded_json = json.loads(response.text)
+    return PlayerSummary(**loaded_json["response"]["players"][0])
+    # API returns a list with 1 element which we have to specify [0] in order to map to the data class
+
+
 def get_players(game_id: int) -> Players:
     response = RequestsRetryClient().request(method='GET',
                                              url=f"https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?format=json&appid={game_id}")
@@ -93,13 +122,23 @@ def get_players(game_id: int) -> Players:
     return Players(**x)
 
 
-def get_all_game_player_counts():
-    all_games = get_all_games()
-    for x in all_games:
-        response = RequestsRetryClient().request(method='GET',  # can this take multiple app ids per API call?  print statements to see how long it takes, maybe hitting errors?  How many requests allowed?  Keep researching better top games APIs to hit.
-                                                 url=f"https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?format=json&appid={x['appid']}")
-        loaded_json = json.loads(response.text)
-        player_count = loaded_json["response"]
-        x.update(player_count)
-    return all_games
+def get_game_details(game_id: int) -> GameDetails:
+    response = RequestsRetryClient().request(method='GET',
+                                             url=f"https://steamspy.com/api.php?request=appdetails&appid={game_id}")
+    loaded_json = json.loads(response.text)
+    return GameDetails(**loaded_json)
 
+
+def get_game_url(game_id: int) -> str:
+    game_url = f"https://store.steampowered.com/app/{game_id}"
+    return game_url
+
+
+def get_user_url(user: str) -> str:
+    user_url = f"https://steamcommunity.com/id/{user}"
+    return user_url
+
+
+def get_achievement_url(user: str, game_id: int) -> str:
+    achievements_url = f"https://steamcommunity.com/id/{user}/stats/{game_id}/achievements/"
+    return achievements_url
