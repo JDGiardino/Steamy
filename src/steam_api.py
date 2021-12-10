@@ -118,3 +118,8 @@ class SteamApi(object):
     def get_achievement_url(self, user: str, game_id: int) -> str:
         achievements_url = f"https://steamcommunity.com/id/{user}/stats/{game_id}/achievements/"
         return achievements_url
+
+
+if __name__ == "__main__":
+    steam_api = SteamApi()
+    steam_api.get_achievement_percent(1172470)
