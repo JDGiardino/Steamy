@@ -1,10 +1,12 @@
 import datetime
 
 from src.exceptions import GameIsNoneError, UserIsNoneError
-from src import steam_api
+from src.steam_api import SteamApi
 from src.utils import formatter
 from src.models.RarestAchievement import RarestAchievement
 from src.models.Stats import Stats
+
+steam_api = SteamApi()  # Global variable to this module that is instaniating a SteamApi class.
 
 
 def get_game_id(game_name: str) -> int:
@@ -46,7 +48,7 @@ def users_game_stats(user: str, game_name: str) -> Stats:
     description1 = f"[{user}]({steam_api.get_user_url(user)}) has a total of {total_hours} hours played on [{game_name}]({steam_api.get_game_url(game_id)})! "
     # This uses special Discord syntax to make user and game_name into a clickable URL.  [notation_here](link_here)
     player_achievements = steam_api.get_player_achievements(user_id, game_id)
-    description2 = f"{user}({steam_api.get_user_url(user)}) has unlocked [{player_achievements.unlocked}/{player_achievements.total} achievements]({steam_api.get_achievement_url})!"
+    description2 = f"[{user}]({steam_api.get_user_url(user)}) has unlocked [{player_achievements.unlocked}/{player_achievements.total} achievements]({steam_api.get_achievement_url(user, game_id)})!"
     return Stats(name=game_name, description1=description1, description2=description2, icon=steam_api.get_game_icon(game_id))
 
 
@@ -58,7 +60,7 @@ def users_stats(user) -> Stats:
         total_playtime = formatter.format_users_total_playtime(steam_api.get_users_total_playtime(user_id))
     player_summary = steam_api.get_player_summaries(user_id)
     description1 = f"[{user}]({player_summary.profileurl}) has a grand total of {total_playtime} hours played on Steam!"
-    description2 = f"{user}({player_summary.profileurl})'s profile was created on {datetime.datetime.fromtimestamp(player_summary.timecreated)}"
+    description2 = f"[{user}]({player_summary.profileurl})'s profile was created on {datetime.datetime.fromtimestamp(player_summary.timecreated)}"
     return Stats(name=user, description1=description1, description2=description2, icon=player_summary.avatarfull)
 
 
