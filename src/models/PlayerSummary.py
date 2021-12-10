@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from dataclasses import field
+from typing import Optional
 
 
 @dataclass(frozen=True)
@@ -41,7 +42,7 @@ class PlayerSummary:
     personastateflags: int
     commentpermission: int = field(default=0)  # Using defaults for optional fields that may not appear in the API call
     # If set, indicates the profile allows public comments.
-    profilestate: int = field(default=0)
+    profilestate: Optional[int] = field(default=None)  # MAKE THIS CHANGE FOR ALL BELOW!!!!!
     # If set, indicates the user has a community profile configured (will be set to '1')
     realname: str = field(default="No real name set")
     # The player's "Real Name", if they have set it

@@ -4,14 +4,13 @@ import os
 
 import bot_helper
 from src.exceptions import GameIsNoneError, UserIsNoneError
-from src import steam_api
 
 DISCORD_BOT_TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
 if not DISCORD_BOT_TOKEN:
     raise Exception('No DISCORD_BOT_TOKEN provided')
 
 bot = commands.Bot(command_prefix='$')
-bot.remove_command('help')  # Removes discord's build in help command so we can create a custom one
+bot.remove_command('help')  # Removes discord's built in help command so we can create a custom one
 
 
 def main():
@@ -56,12 +55,12 @@ def main():
         name="rarest_achievement", description="Prints the least unlocked achievement for a given game"
     )
     async def achievement(ctx, *, arg: str):
-        rarest_achievement_strings = bot_helper.rarest_achievement_desc(arg)
-        embed = discord.Embed(title=f"{rarest_achievement_strings.name}",
-                              description=f"{rarest_achievement_strings.achievement}\n\n"
-                                          f"{rarest_achievement_strings.description}",
+        rarest_achievement = bot_helper.rarest_achievement_desc(arg)
+        embed = discord.Embed(title=f"{rarest_achievement.name}",
+                              description=f"{rarest_achievement.achievement}\n\n"
+                                          f"{rarest_achievement.description}",
                               color=discord.Colour.blue())
-        embed.set_thumbnail(url=f"{rarest_achievement_strings.icon}")
+        embed.set_thumbnail(url=f"{rarest_achievement.icon}")
         try:
             await ctx.send(embed=embed)
         except GameIsNoneError as exc:

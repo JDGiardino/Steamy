@@ -1,10 +1,12 @@
 import datetime
 
 from src.exceptions import GameIsNoneError, UserIsNoneError
-from src import steam_api
+from src.steam_api import SteamApi
 from src.utils import formatter
 from src.models.RarestAchievement import RarestAchievement
 from src.models.Stats import Stats
+
+steam_api = SteamApi()  # Global variable to this module that is instaniating a SteamApi class.
 
 
 def get_game_id(game_name: str) -> int:
