@@ -60,16 +60,8 @@ def users_stats(user) -> Stats:
         total_playtime = formatter.format_users_total_playtime(steam_api.get_users_total_playtime(user_id))
     player_summary = steam_api.get_player_summaries(user_id)
     description1 = f"[{user}]({player_summary.profileurl}) has a grand total of {total_playtime} hours played on Steam!"
-<<<<<<< Top100Games
-<<<<<<< Updated upstream
-    description2 = f"{user}({player_summary.profileurl})'s profile was created on {datetime.datetime.fromtimestamp(player_summary.timecreated)}"
-=======
     description2 = f"[{user}]({player_summary.profileurl})'s profile was created on " \
                    f"{datetime.datetime.fromtimestamp(player_summary.timecreated)}"
->>>>>>> Stashed changes
-=======
-    description2 = f"[{user}]({player_summary.profileurl})'s profile was created on {datetime.datetime.fromtimestamp(player_summary.timecreated)}"
->>>>>>> main
     return Stats(name=user, description1=description1, description2=description2, icon=player_summary.avatarfull)
 
 
