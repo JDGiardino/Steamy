@@ -40,24 +40,24 @@ class PlayerSummary:
     timecreated: int
     # The time the player's account was created.
     personastateflags: int
-    commentpermission: int = field(default=0)  # Using defaults for optional fields that may not appear in the API call
+    commentpermission: Optional[int] = field(default=None) # Using defaults for optional fields that may not appear in the API call
     # If set, indicates the profile allows public comments.
-    profilestate: Optional[int] = field(default=None)  # MAKE THIS CHANGE FOR ALL BELOW!!!!!
+    profilestate: Optional[int] = field(default=None)
     # If set, indicates the user has a community profile configured (will be set to '1')
-    realname: str = field(default="No real name set")
+    realname: Optional[str] = field(default=None)
     # The player's "Real Name", if they have set it
-    gameid: int = field(default=0)
+    gameid: Optional[int] = field(default=None)
     # If the user is currently in-game, this value will be returned and set to the gameid of that game.
-    gameserverip: int = field(default=0)
+    gameserverip: Optional[int] = field(default=None)
     # The ip and port of the game server the user is currently playing on, if they are playing on-line in a game
     # using Steam matchmaking. Otherwise will be set to "0.0.0.0:0".
-    gameextrainfo: str = field(default="No game being played")
+    gameextrainfo: Optional[str] = field(default=None)
     # If the user is currently in-game, this will be the name of the game they are playing. This may be the name of a
     # non-Steam game shortcut.
-    loccountrycode: int = field(default=0)
+    loccountrycode: Optional[int] = field(default=None)
     # If set on the user's Steam Community profile, The user's country of residence, 2-character ISO country code
-    locstatecode: int = field(default=0)
+    locstatecode: Optional[int] = field(default=None)
     # If set on the user's Steam Community profile, The user's state of residence
-    loccityid: int = field(default=0)
+    loccityid: Optional[int] = field(default=None)
     # An internal code indicating the user's city of residence. A future update will provide this data in a more
     # useful way.

@@ -23,13 +23,12 @@ class SteamApi(object):
         if not self.STEAM_API_KEY:
             raise Exception('No STEAM_API_KEY provided')
 
-    def __request(self, url: str) -> dict:  # __ private function, no one outside this class needs t
+    def __request(self, url: str) -> dict:
         response = RequestsRetryClient().request(method='GET', url=url)
         return json.loads(response.text)
 
     def get_all_games(self) -> dict:
         json_app_list = self.__request("https://api.steampowered.com/ISteamApps/GetAppList/v0002/")
-        # TO DO  Repeat this for each method that it applied to ^^^
         return json_app_list["applist"]["apps"]
 
     def get_steam_id(self, community_name: str) -> int:
@@ -110,7 +109,6 @@ class SteamApi(object):
             players = self.get_players(x["appid"])
             top_100.append({"appid": x["appid"], "name": x["name"], "player_count": players.player_count})
         sorted_top_100 = sorted(top_100, key=lambda i: i["player_count"], reverse=True)
-        print(sorted_top_100)
         return sorted_top_100
 
     def get_game_details(self, game_id: int) -> GameDetails:

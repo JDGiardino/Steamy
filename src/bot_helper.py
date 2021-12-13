@@ -6,7 +6,7 @@ from src.utils import formatter
 from src.models.RarestAchievement import RarestAchievement
 from src.models.Stats import Stats
 
-steam_api = SteamApi()  # Global variable to this module that is instaniating a SteamApi class.
+steam_api = SteamApi()  # Global variable to this module that is instantiating a SteamApi class.
 
 
 def get_game_id(game_name: str) -> int:
@@ -45,10 +45,13 @@ def users_game_stats(user: str, game_name: str) -> Stats:
     else:
         playtime = steam_api.get_game_playtimes(user_id, game_id)
         total_hours = formatter.format_users_game_playtime(playtime.playtime_forever)
-    description1 = f"[{user}]({steam_api.get_user_url(user)}) has a total of {total_hours} hours played on [{game_name}]({steam_api.get_game_url(game_id)})! "
+    description1 = f"[{user}]({steam_api.get_user_url(user)}) has a total of {total_hours} hours " \
+                   f"played on [{game_name}]({steam_api.get_game_url(game_id)})! "
     # This uses special Discord syntax to make user and game_name into a clickable URL.  [notation_here](link_here)
     player_achievements = steam_api.get_player_achievements(user_id, game_id)
-    description2 = f"[{user}]({steam_api.get_user_url(user)}) has unlocked [{player_achievements.unlocked}/{player_achievements.total} achievements]({steam_api.get_achievement_url(user, game_id)})!"
+    description2 = f"[{user}]({steam_api.get_user_url(user)}) has unlocked " \
+                   f"[{player_achievements.unlocked}/{player_achievements.total} achievements]" \
+                   f"({steam_api.get_achievement_url(user, game_id)})!"
     return Stats(name=game_name, description1=description1, description2=description2, icon=steam_api.get_game_icon(game_id))
 
 
@@ -78,7 +81,6 @@ def game_desc(game_name: str) -> Stats:
     for x in top100games:
         if x["name"] == game_name:
             game_rank = top100games.index(x) + 1
-            print(game_rank)
             description2 = f"[{game_name}]({steam_api.get_game_url(game_id)}) has a current player count of {player_count}!\n " \
                            f"[{game_name}]({steam_api.get_game_url(game_id)}) is currently the number {game_rank} most played game on Steam!"
     return Stats(name=game_name, description1=description1, description2=description2, icon=steam_api.get_game_icon(game_id))
