@@ -23,13 +23,12 @@ class SteamApi(object):
         if not self.STEAM_API_KEY:
             raise Exception('No STEAM_API_KEY provided')
 
-    def __request(self, url: str) -> dict:  # __ private function, no one outside this class needs t
+    def __request(self, url: str) -> dict:
         response = RequestsRetryClient().request(method='GET', url=url)
         return json.loads(response.text)
 
     def get_all_games(self) -> dict:
         json_app_list = self.__request("https://api.steampowered.com/ISteamApps/GetAppList/v0002/")
-        # TO DO  Repeat this for each method that it applied to ^^^
         return json_app_list["applist"]["apps"]
 
     def get_steam_id(self, community_name: str) -> int:
@@ -102,10 +101,19 @@ class SteamApi(object):
         x = loaded_json["response"]
         return Players(**x)
 
+    def get_top_100_games(self) -> list[dict[str: str]]:
+        top_100_in_2_weeks = self.__request(f"https://steamspy.com/api.php?request=top100in2weeks").values()
+        # .values() turns the returned dict into a list
+        top_100 = []
+        for x in top_100_in_2_weeks:
+            players = self.get_players(x["appid"])
+            top_100.append({"appid": x["appid"], "name": x["name"], "player_count": players.player_count})
+        sorted_top_100 = sorted(top_100, key=lambda i: i["player_count"], reverse=True)
+        return sorted_top_100
+
     def get_game_details(self, game_id: int) -> GameDetails:
         loaded_json = self.__request(f"https://steamspy.com/api.php?request=appdetails&appid={game_id}")
         return GameDetails(**loaded_json)
-
 
     def get_game_url(self, game_id: int) -> str:
         game_url = f"https://store.steampowered.com/app/{game_id}"
@@ -118,8 +126,3 @@ class SteamApi(object):
     def get_achievement_url(self, user: str, game_id: int) -> str:
         achievements_url = f"https://steamcommunity.com/id/{user}/stats/{game_id}/achievements/"
         return achievements_url
-
-
-if __name__ == "__main__":
-    steam_api = SteamApi()
-    steam_api.get_achievement_percent(1172470)
