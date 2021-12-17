@@ -28,7 +28,7 @@ def main():
         embed.add_field(name='$game GAME NAME',
                         value='Prints the current player count for a given game', inline=False)
         embed.add_field(name='$top NUMBER',
-                        value='Prints the top X played games of a given number', inline=False)
+                        value='Prints the top X played games of a given number up to 100', inline=False)
         embed.add_field(name='$users_game "USER NAME" "GAME NAME"',
                         value='Prints a given user\'s stats on a given game.  \nNOTE: Quotes around the user name '
                               'and game name are required', inline=False)
@@ -114,7 +114,7 @@ def main():
             await ctx.send(exc)
 
     @bot.command(
-        name="top", description="Prints the top X played games of a given number"
+        name="top", description="Prints the top X played games of a given number up to 100"
     )
     async def top(ctx, *, arg: int):
         try:

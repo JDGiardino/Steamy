@@ -1,6 +1,6 @@
 import datetime
 
-from src.exceptions import GameIsNoneError, UserIsNoneError
+from src.exceptions import GameIsNoneError, UserIsNoneError, ExceedingTopGamesMax
 from src.steam_api import SteamApi
 from src.utils import formatter
 from src.models.RarestAchievement import RarestAchievement
@@ -87,14 +87,18 @@ def game_desc(game_name: str) -> Stats:
 
 
 def get_top_x_games(x: int) -> Stats:
-    top100games = steam_api.get_top_100_games()
-    top_x_games = []
-    for count, game in enumerate(top100games, start=1):
-        if x >= count:
-            top_x_games.append({"rank": count, "name": game["name"], "player_count": game["player_count"]})
-    title = f"Top {x} Games by Current Players"
-    description1 = f"The following is currently the top {x} played games on Steam!"
-    description2 = ""
-    for game in top_x_games:
-        description2 += f"#{game['rank']}) [{game['name']}]({steam_api.get_game_url(game['name'])}) with {formatter.format_numbers_with_comma(game['player_count'])} players\n"
-    return Stats(name=title, description1=description1, description2=description2, icon=steam_api.get_steam_icon())
+    if x > 100:
+        raise ExceedingTopGamesMax("Can only search up to a maximum of the top 100 games.")
+    else:
+        top100games = steam_api.get_top_100_games()
+        top_x_games = []
+        for count, game in enumerate(top100games, start=1):
+            if x >= count:
+                top_x_games.append({"rank": count, "name": game["name"], "player_count": game["player_count"]})
+        title = f"Top {x} Games by Current Players"
+        description1 = f"The following is currently the top {x} played games on Steam!"
+        description2 = ""
+        for game in top_x_games:
+            description2 += f"#{game['rank']}) [{game['name']}]({steam_api.get_game_url(game['name'])}) with " \
+                            f"{formatter.format_numbers_with_comma(game['player_count'])} players\n"
+        return Stats(name=title, description1=description1, description2=description2, icon=steam_api.get_steam_icon())
