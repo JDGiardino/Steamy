@@ -79,16 +79,20 @@ class SteamApi(object):
     def get_steam_icon() -> str:
         return "https://icons.iconarchive.com/icons/papirus-team/papirus-apps/512/steam-icon.png"
 
-    def get_player_achievements(self, user_id: int, game_id: int) -> PlayerAchievements:
+    def get_player_achievements(self, user_id: int, game_id: int) -> Union[None, PlayerAchievements]:
         loaded_json = self.__request(f"https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key={self.STEAM_API_KEY}&appid={game_id}&steamid={user_id}")
-        achievements = loaded_json["playerstats"]["achievements"]
-        unlocked = 0
-        total = 0
-        for x in achievements:
-            if x["achieved"] == 1:
-                unlocked += 1
-            total += 1
-        return PlayerAchievements(unlocked=unlocked, total=total,)
+        if loaded_json == {'playerstats': {'error': 'Requested app has no stats', 'success': False}}:
+            return None
+        # API returns differently for a game_id passed a the user_id has never played.  Above 2 lines catches this case.
+        else:
+            achievements = loaded_json["playerstats"]["achievements"]
+            unlocked = 0
+            total = 0
+            for x in achievements:
+                if x["achieved"] == 1:
+                    unlocked += 1
+                total += 1
+            return PlayerAchievements(unlocked=unlocked, total=total,)
 
     def get_users_total_playtime(self, user_id: int) -> Union[None, float]:
         loaded_json = self.__request(f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={self.STEAM_API_KEY}&steamid={user_id}&format=json")

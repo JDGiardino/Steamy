@@ -3,7 +3,7 @@ from discord.ext import commands
 import os
 
 import bot_helper
-from src.exceptions import GameIsNoneError, UserIsNoneError
+from src.exceptions import GameIsNoneError, UserIsNoneError, ExceedingTopGamesMax
 
 DISCORD_BOT_TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
 if not DISCORD_BOT_TOKEN:
@@ -125,7 +125,7 @@ def main():
                                   color=discord.Colour.blue())
             embed.set_thumbnail(url=f"{stats.icon}")
             await ctx.send(embed=embed)
-        except GameIsNoneError as exc:
+        except ExceedingTopGamesMax as exc:
             await ctx.send(exc)
 
     @bot.event

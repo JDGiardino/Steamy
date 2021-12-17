@@ -34,6 +34,7 @@ def rarest_achievement_desc(game_name: str) -> RarestAchievement:
     achievement_description = achievement_details.description
     percent = formatter.format_achievement_percent(achievement_percent.percent)
     achievement = f"The rarest achievement in [{game_name}]({steam_api.get_game_url(game_id)}) is {name} which {percent}% of players unlocked "
+    # This uses special Discord syntax to make user and game_name into a clickable URL.  [notation_here](link_here)
     description = f"The achievement description is \"{achievement_description}\""
     return RarestAchievement(name=name, achievement=achievement, description=description, icon=achievement_details.icon)
 
@@ -48,11 +49,13 @@ def users_game_stats(user: str, game_name: str) -> Stats:
         total_hours = formatter.format_users_game_playtime(playtime.playtime_forever)
     description1 = f"[{user}]({steam_api.get_user_url(user)}) has a total of {total_hours} hours " \
                    f"played on [{game_name}]({steam_api.get_game_url(game_id)})! "
-    # This uses special Discord syntax to make user and game_name into a clickable URL.  [notation_here](link_here)
     player_achievements = steam_api.get_player_achievements(user_id, game_id)
-    description2 = f"[{user}]({steam_api.get_user_url(user)}) has unlocked " \
-                   f"[{player_achievements.unlocked}/{player_achievements.total} achievements]" \
-                   f"({steam_api.get_achievement_url(user, game_id)})!"
+    if player_achievements is None:
+        description2 = f"[{user}]({steam_api.get_user_url(user)}) has unlocked 0 achievements"
+    else:
+        description2 = f"[{user}]({steam_api.get_user_url(user)}) has unlocked " \
+                       f"[{player_achievements.unlocked}/{player_achievements.total} achievements]" \
+                       f"({steam_api.get_achievement_url(user, game_id)})!"
     return Stats(name=game_name, description1=description1, description2=description2, icon=steam_api.get_game_icon(game_id))
 
 
@@ -96,6 +99,6 @@ def get_top_x_games(x: int) -> Stats:
         description1 = f"The following is currently the top {x} played games on Steam!"
         description2 = ""
         for game in top100games:
-            description2 += f'#{top100games.index(game) + 1} [{game["name"]}]({steam_api.get_game_url(game["appid"])})'\
+            description2 += f'#{top100games.index(game) + 1} {game["name"]}'\
                             f' with {formatter.format_numbers_with_comma(game["player_count"])} players\n'
         return Stats(name=title, description1=description1, description2=description2, icon=steam_api.get_steam_icon())
