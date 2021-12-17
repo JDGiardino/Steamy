@@ -1,4 +1,5 @@
 import datetime
+import itertools
 
 from src.exceptions import GameIsNoneError, UserIsNoneError, ExceedingTopGamesMax
 from src.steam_api import SteamApi
@@ -90,15 +91,11 @@ def get_top_x_games(x: int) -> Stats:
     if x > 100:
         raise ExceedingTopGamesMax("Can only search up to a maximum of the top 100 games.")
     else:
-        top100games = steam_api.get_top_100_games()
-        top_x_games = []
-        for count, game in enumerate(top100games, start=1):
-            if x >= count:
-                top_x_games.append({"rank": count, "name": game["name"], "player_count": game["player_count"]})
+        top100games = steam_api.get_top_100_games()[:x]
         title = f"Top {x} Games by Current Players"
         description1 = f"The following is currently the top {x} played games on Steam!"
         description2 = ""
-        for game in top_x_games:
-            description2 += f"#{game['rank']}) [{game['name']}]({steam_api.get_game_url(game['name'])}) with " \
-                            f"{formatter.format_numbers_with_comma(game['player_count'])} players\n"
+        for game in top100games:
+            description2 += f'#{top100games.index(game) + 1} [{game["name"]}]({steam_api.get_game_url(game["appid"])})'\
+                            f' with {formatter.format_numbers_with_comma(game["player_count"])} players\n'
         return Stats(name=title, description1=description1, description2=description2, icon=steam_api.get_steam_icon())
