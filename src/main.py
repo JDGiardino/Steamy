@@ -27,7 +27,9 @@ def main():
                         value='Prints a given user\'s total played hours on Steam', inline=False)
         embed.add_field(name='$game GAME NAME',
                         value='Prints the current player count for a given game', inline=False)
-        embed.add_field(name='$users_game_stats "USER NAME" "GAME NAME"',
+        embed.add_field(name='$top NUMBER',
+                        value='Prints the top X played games of a given number', inline=False)
+        embed.add_field(name='$users_game "USER NAME" "GAME NAME"',
                         value='Prints a given user\'s stats on a given game.  \nNOTE: Quotes around the user name '
                               'and game name are required', inline=False)
         await ctx.message.author.send(embed=embed)
@@ -67,9 +69,9 @@ def main():
             await ctx.send(exc)
 
     @bot.command(
-        name="users_game_stats", description="Prints a given user's stats on a given game"
+        name="users_game", description="Prints a given user's stats on a given game"
     )
-    async def users_game_stats(ctx, arg1: str, arg2: str):
+    async def users_game(ctx, arg1: str, arg2: str):
         try:
             stats = bot_helper.users_game_stats(arg1, arg2)
             embed = discord.Embed(title=f"{stats.name}",
@@ -102,6 +104,21 @@ def main():
     async def game(ctx, *, arg: str):
         try:
             stats = bot_helper.game_desc(arg)
+            embed = discord.Embed(title=f"{stats.name}",
+                                  description=f"{stats.description1}\n\n"
+                                              f"{stats.description2}",
+                                  color=discord.Colour.blue())
+            embed.set_thumbnail(url=f"{stats.icon}")
+            await ctx.send(embed=embed)
+        except GameIsNoneError as exc:
+            await ctx.send(exc)
+
+    @bot.command(
+        name="top", description="Prints the top X played games of a given number"
+    )
+    async def top(ctx, *, arg: int):
+        try:
+            stats = bot_helper.get_top_x_games(arg)
             embed = discord.Embed(title=f"{stats.name}",
                                   description=f"{stats.description1}\n\n"
                                               f"{stats.description2}",

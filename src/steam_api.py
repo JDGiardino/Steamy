@@ -17,21 +17,26 @@ from steam.steamid import SteamID
 
 class SteamApi(object):
 
-    def __init__(self):
+    def __init__(self, request_client=None):
         self.STEAM_API_KEY = os.environ.get('STEAM_API_KEY')
         # Obtain a Steam Web API Key from https://steamcommunity.com/dev/apikey
         if not self.STEAM_API_KEY:
             raise Exception('No STEAM_API_KEY provided')
+        if request_client is None:
+            self.request_client = RequestsRetryClient()
+        else:
+            self.request_client = request_client
 
     def __request(self, url: str) -> dict:
-        response = RequestsRetryClient().request(method='GET', url=url)
+        response = self.request_client.request(method='GET', url=url)
         return json.loads(response.text)
 
     def get_all_games(self) -> dict:
         json_app_list = self.__request("https://api.steampowered.com/ISteamApps/GetAppList/v0002/")
         return json_app_list["applist"]["apps"]
 
-    def get_steam_id(self, community_name: str) -> int:
+    @staticmethod
+    def get_steam_id(community_name: str) -> int:
         return steam.steamid.from_url(f'https://steamcommunity.com/id/{community_name}')
         # This takes a Steam community URL for a profile and converts it to a SteamID
 
@@ -66,8 +71,13 @@ class SteamApi(object):
                 if x["appid"] == game_id:
                     return Playtime(**x)
 
-    def get_game_icon(self, game_id: int) -> str:
+    @staticmethod
+    def get_game_icon(game_id: int) -> str:
         return f"https://steamcdn-a.akamaihd.net/steam/apps/{game_id}/header.jpg"
+
+    @staticmethod
+    def get_steam_icon() -> str:
+        return "https://icons.iconarchive.com/icons/papirus-team/papirus-apps/512/steam-icon.png"
 
     def get_player_achievements(self, user_id: int, game_id: int) -> PlayerAchievements:
         loaded_json = self.__request(f"https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key={self.STEAM_API_KEY}&appid={game_id}&steamid={user_id}")
@@ -115,14 +125,17 @@ class SteamApi(object):
         loaded_json = self.__request(f"https://steamspy.com/api.php?request=appdetails&appid={game_id}")
         return GameDetails(**loaded_json)
 
-    def get_game_url(self, game_id: int) -> str:
+    @staticmethod
+    def get_game_url(game_id: int) -> str:
         game_url = f"https://store.steampowered.com/app/{game_id}"
         return game_url
 
-    def get_user_url(self, user: str) -> str:
+    @staticmethod
+    def get_user_url(user: str) -> str:
         user_url = f"https://steamcommunity.com/id/{user}"
         return user_url
 
-    def get_achievement_url(self, user: str, game_id: int) -> str:
+    @staticmethod
+    def get_achievement_url(user: str, game_id: int) -> str:
         achievements_url = f"https://steamcommunity.com/id/{user}/stats/{game_id}/achievements/"
         return achievements_url
