@@ -53,8 +53,10 @@ def users_game_stats(user: str, game_name: str) -> Stats:
     description1 = f"[{user}]({steam_api.get_user_url(user)}) has a total of {total_hours} hours " \
                    f"played on [{game_name}]({steam_api.get_game_url(game_id)})! "
     player_achievements = steam_api.get_player_achievements(user_id, game_id)
-    if player_achievements is None:
+    if player_achievements == 0:
         description2 = f"[{user}]({steam_api.get_user_url(user)}) has unlocked 0 achievements"
+    elif player_achievements == 1:
+        description2 = f"[{game_name}]({steam_api.get_game_url(game_id)}) does not have any achievements to unlock."
     else:
         description2 = f"[{user}]({steam_api.get_user_url(user)}) has unlocked " \
                        f"[{player_achievements.unlocked}/{player_achievements.total} achievements]" \
