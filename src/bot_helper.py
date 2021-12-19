@@ -1,7 +1,7 @@
 import datetime
 import itertools
 
-from src.exceptions import GameIsNoneError, UserIsNoneError, ExceedingTopGamesMax
+from src.exceptions import GameIsNoneError, UserIsNoneError, ExceedingTopGamesMax, GameHasNoAchievements
 from src.steam_api import SteamApi
 from src.utils import formatter
 from src.models.RarestAchievement import RarestAchievement
@@ -29,14 +29,17 @@ def get_user_id(user: str) -> int:
 def rarest_achievement_desc(game_name: str) -> RarestAchievement:
     game_id = get_game_id(game_name)
     achievement_percent = steam_api.get_achievement_percent(game_id)
-    achievement_details = steam_api.get_achievement_details(achievement_percent.name, game_id)
-    name = achievement_details.displayName
-    achievement_description = achievement_details.description
-    percent = formatter.format_achievement_percent(achievement_percent.percent)
-    achievement = f"The rarest achievement in [{game_name}]({steam_api.get_game_url(game_id)}) is {name} which {percent}% of players unlocked "
-    # This uses special Discord syntax to make user and game_name into a clickable URL.  [notation_here](link_here)
-    description = f"The achievement description is \"{achievement_description}\""
-    return RarestAchievement(name=name, achievement=achievement, description=description, icon=achievement_details.icon)
+    if achievement_percent is None:
+        raise GameHasNoAchievements(f"{game_name} does not have any achievements to unlock.")
+    else:
+        achievement_details = steam_api.get_achievement_details(achievement_percent.name, game_id)
+        name = achievement_details.displayName
+        achievement_description = achievement_details.description
+        percent = formatter.format_achievement_percent(achievement_percent.percent)
+        achievement = f"The rarest achievement in [{game_name}]({steam_api.get_game_url(game_id)}) is {name} which {percent}% of players unlocked "
+        # This uses special Discord syntax to make user and game_name into a clickable URL.  [notation_here](link_here)
+        description = f"The achievement description is \"{achievement_description}\""
+        return RarestAchievement(name=name, achievement=achievement, description=description, icon=achievement_details.icon)
 
 
 def users_game_stats(user: str, game_name: str) -> Stats:
@@ -102,3 +105,7 @@ def get_top_x_games(x: int) -> Stats:
             description2 += f'#{top100games.index(game) + 1} {game["name"]}'\
                             f' with {formatter.format_numbers_with_comma(game["player_count"])} players\n'
         return Stats(name=title, description1=description1, description2=description2, icon=steam_api.get_steam_icon())
+
+
+if __name__ == "__main__":
+    rarest_achievement_desc("Fallout 4")

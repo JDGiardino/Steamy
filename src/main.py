@@ -3,7 +3,7 @@ from discord.ext import commands
 import os
 
 import bot_helper
-from src.exceptions import GameIsNoneError, UserIsNoneError, ExceedingTopGamesMax
+from src.exceptions import GameIsNoneError, UserIsNoneError, ExceedingTopGamesMax, GameHasNoAchievements
 
 DISCORD_BOT_TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
 if not DISCORD_BOT_TOKEN:
@@ -65,7 +65,7 @@ def main():
                                   color=discord.Colour.blue())
             embed.set_thumbnail(url=f"{rarest_achievement.icon}")
             await ctx.send(embed=embed)
-        except GameIsNoneError as exc:
+        except (GameIsNoneError, GameHasNoAchievements) as exc:
             await ctx.send(exc)
 
     @bot.command(

@@ -46,13 +46,17 @@ class SteamApi(object):
             if game_name == x['name']:
                 return Game(**x)
 
-    def get_achievement_percent(self, game_id: int) -> AchievementPercent:
+    def get_achievement_percent(self, game_id: int) -> Union[None, AchievementPercent]:
         loaded_json = self.__request(f"https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid={game_id}")
-        json_achievement_list = loaded_json["achievementpercentages"]["achievements"]
-        rarest_achievement = min(x["percent"] for x in json_achievement_list)
-        for x in json_achievement_list:
-            if x["percent"] == rarest_achievement:
-                return AchievementPercent(**x)
+        if loaded_json == {}:
+            return None
+        # API returns empty json for a game_id passed with no achievements.  Above 2 lines catches this case.
+        else:
+            json_achievement_list = loaded_json["achievementpercentages"]["achievements"]
+            rarest_achievement = min(x["percent"] for x in json_achievement_list)
+            for x in json_achievement_list:
+                if x["percent"] == rarest_achievement:
+                    return AchievementPercent(**x)
 
     def get_achievement_details(self, achievement_name: str, game_id: int) -> AchievementDetails:
         loaded_json = self.__request(f"https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key={self.STEAM_API_KEY}&appid={game_id}")
