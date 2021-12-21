@@ -61,6 +61,9 @@ def users_game_stats(user: str, game_name: str) -> Stats:
         description2 = f"[{user}]({steam_api.get_user_url(user)}) has unlocked " \
                        f"[{player_achievements.unlocked}/{player_achievements.total} achievements]" \
                        f"({steam_api.get_achievement_url(user, game_id)})!"
+        if player_achievements.unlocked/player_achievements.total == 1:
+            description2 += f"\nWow, [{user}]({steam_api.get_user_url(user)}) 100% perfected " \
+                            f"[{game_name}]({steam_api.get_game_url(game_id)})!!!"
     return Stats(name=game_name, description1=description1, description2=description2, icon=steam_api.get_game_icon(game_id))
 
 
