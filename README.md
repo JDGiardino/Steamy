@@ -22,3 +22,16 @@ The following lists all the commands Steamy bot can preform and examples of thei
 
 `$game GAME_NAME` - This command posts to the server the player count and rank in top played games for the given game name. 
 <img width="641" alt="Screen Shot 2021-12-21 at 10 33 06 PM" src="https://user-images.githubusercontent.com/14614633/147031190-9c937f96-dc38-4b6e-9e9d-f9b1967b625a.png">
+
+`$top NUMBER` - This command posts to the server the top played games by player count up to the given number(No higher than 100).
+<img width="635" alt="Screen Shot 2021-12-21 at 10 39 08 PM" src="https://user-images.githubusercontent.com/14614633/147031705-477465be-4a55-44c1-92f1-eb69e0810b31.png">
+
+`$users_game "USERS_NAME" "GAME_NAME"` - This command posts to the server a given user's played hours and unlocked achievements for a given game.
+
+<img width="657" alt="Scre![Uploading Screen Shot 2021-12-21 at 11.04.23 PM.png…]()
+en Shot 2021-12-21 at 10 43 33 PM" src="https://user-images.githubusercontent.com/14614633/147032049-9af3ef78-a000-4675-b21d-34d55205e9d6.png">
+
+`$game_id GAME_NAME` - This command posts to the server the ID for a given game name. 
+
+
+
