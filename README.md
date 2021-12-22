@@ -37,7 +37,7 @@ The following lists all the commands Steamy bot can preform and examples of thei
 
 `$game_id GAME_NAME` - This command posts to the server the ID for a given game name. 
 
-<img width="657" alt="Scre<img width="414" alt="Screen Shot 2021-12-21 at 11 04 23 PM" src="https://user-images.githubusercontent.com/14614633/147037953-9ec74d3c-8788-40d4-9d97-dafe491466e0.png">
+<img width="414" alt="Screen Shot 2021-12-21 at 11 04 23 PM" src="https://user-images.githubusercontent.com/14614633/147037953-9ec74d3c-8788-40d4-9d97-dafe491466e0.png">
 
 `$user_id` USER_NAME - This command posts to the server the ID for a given Steam user name.
 
