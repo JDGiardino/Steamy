@@ -28,10 +28,12 @@ The following lists all the commands Steamy bot can preform and examples of thei
 
 `$users_game "USERS_NAME" "GAME_NAME"` - This command posts to the server a given user's played hours and unlocked achievements for a given game.
 
-<img width="657" alt="Scre![Uploading Screen Shot 2021-12-21 at 11.04.23 PM.png…]()
-en Shot 2021-12-21 at 10 43 33 PM" src="https://user-images.githubusercontent.com/14614633/147032049-9af3ef78-a000-4675-b21d-34d55205e9d6.png">
+<img width="657" alt="Scre![Uploading Screen Shot 2021-12-21 at 11.04.23 PM.png…]() en Shot 2021-12-21 at 10 43 33 PM" src="https://user-images.githubusercontent.com/14614633/147032049-9af3ef78-a000-4675-b21d-34d55205e9d6.png">
 
 `$game_id GAME_NAME` - This command posts to the server the ID for a given game name. 
+<img width="657" alt="Scre<img width="414" alt="Screen Shot 2021-12-21 at 11 04 23 PM" src="https://user-images.githubusercontent.com/14614633/147037953-9ec74d3c-8788-40d4-9d97-dafe491466e0.png">
 
+`$user_id` USER_NAME - This command posts to the server the ID for a given Steam user name.
+<img width="523" alt="Screen Shot 2021-12-21 at 11 57 38 PM" src="https://user-images.githubusercontent.com/14614633/147038061-df0c57e4-d5aa-4957-95e9-db636cf1ae95.png">
 
 
