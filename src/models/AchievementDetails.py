@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Optional
 
 
 @dataclass(frozen=True)
@@ -7,6 +8,6 @@ class AchievementDetails:
     defaultvalue: int
     displayName: str
     hidden: int
-    description: str
     icon: str
     icongray: str
+    description: Optional[str] = field(default=None)

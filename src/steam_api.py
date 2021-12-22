@@ -46,13 +46,17 @@ class SteamApi(object):
             if game_name == x['name']:
                 return Game(**x)
 
-    def get_achievement_percent(self, game_id: int) -> AchievementPercent:
+    def get_achievement_percent(self, game_id: int) -> Union[None, AchievementPercent]:
         loaded_json = self.__request(f"https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid={game_id}")
-        json_achievement_list = loaded_json["achievementpercentages"]["achievements"]
-        rarest_achievement = min(x["percent"] for x in json_achievement_list)
-        for x in json_achievement_list:
-            if x["percent"] == rarest_achievement:
-                return AchievementPercent(**x)
+        if loaded_json == {}:
+            return None
+        # API returns empty json for a game_id passed with no achievements.  Above 2 lines catches this case.
+        else:
+            json_achievement_list = loaded_json["achievementpercentages"]["achievements"]
+            rarest_achievement = min(x["percent"] for x in json_achievement_list)
+            for x in json_achievement_list:
+                if x["percent"] == rarest_achievement:
+                    return AchievementPercent(**x)
 
     def get_achievement_details(self, achievement_name: str, game_id: int) -> AchievementDetails:
         loaded_json = self.__request(f"https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key={self.STEAM_API_KEY}&appid={game_id}")
@@ -79,20 +83,23 @@ class SteamApi(object):
     def get_steam_icon() -> str:
         return "https://icons.iconarchive.com/icons/papirus-team/papirus-apps/512/steam-icon.png"
 
-    def get_player_achievements(self, user_id: int, game_id: int) -> Union[None, PlayerAchievements]:
+    def get_player_achievements(self, user_id: int, game_id: int) -> Union[int, PlayerAchievements]:
         loaded_json = self.__request(f"https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key={self.STEAM_API_KEY}&appid={game_id}&steamid={user_id}")
         if loaded_json == {'playerstats': {'error': 'Requested app has no stats', 'success': False}}:
-            return None
+            return 0
         # API returns differently for a game_id passed a the user_id has never played.  Above 2 lines catches this case.
         else:
-            achievements = loaded_json["playerstats"]["achievements"]
-            unlocked = 0
-            total = 0
-            for x in achievements:
-                if x["achieved"] == 1:
-                    unlocked += 1
-                total += 1
-            return PlayerAchievements(unlocked=unlocked, total=total,)
+            if 'achievements' not in loaded_json["playerstats"]:
+                return 1
+            else:
+                achievements = loaded_json["playerstats"]["achievements"]
+                unlocked = 0
+                total = 0
+                for x in achievements:
+                    if x["achieved"] == 1:
+                        unlocked += 1
+                    total += 1
+                return PlayerAchievements(unlocked=unlocked, total=total,)
 
     def get_users_total_playtime(self, user_id: int) -> Union[None, float]:
         loaded_json = self.__request(f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={self.STEAM_API_KEY}&steamid={user_id}&format=json")
