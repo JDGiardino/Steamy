@@ -31,10 +31,6 @@ class SteamApi(object):
         response = self.request_client.request(method='GET', url=url)
         return json.loads(response.text)
 
-    def get_all_games(self) -> dict:
-        json_app_list = self.__request("https://api.steampowered.com/ISteamApps/GetAppList/v0002/")
-        return json_app_list["applist"]["apps"]
-
     @staticmethod
     def get_steam_id(community_name: str) -> int:
         return steam.steamid.from_url(f'https://steamcommunity.com/id/{community_name}')
