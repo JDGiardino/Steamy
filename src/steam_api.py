@@ -2,7 +2,7 @@ import steam
 import json
 import os
 
-from typing import Union
+from typing import Union, Optional
 from src.models.AchievementPercent import AchievementPercent
 from src.models.AchievementDetails import AchievementDetails
 from src.models.PlayerAchievements import PlayerAchievements
@@ -31,20 +31,17 @@ class SteamApi(object):
         response = self.request_client.request(method='GET', url=url)
         return json.loads(response.text)
 
-    def get_all_games(self) -> dict:
-        json_app_list = self.__request("https://api.steampowered.com/ISteamApps/GetAppList/v0002/")
-        return json_app_list["applist"]["apps"]
-
     @staticmethod
     def get_steam_id(community_name: str) -> int:
         return steam.steamid.from_url(f'https://steamcommunity.com/id/{community_name}')
         # This takes a Steam community URL for a profile and converts it to a SteamID
 
-    def get_game(self, game_name: str) -> Game:
+    def get_game(self, game_name: str) -> Optional[Game]:
         json_app_list = self.__request("https://api.steampowered.com/ISteamApps/GetAppList/v0002/")
         for x in json_app_list["applist"]["apps"]:
             if game_name == x['name']:
                 return Game(**x)
+        return None
 
     def get_achievement_percent(self, game_id: int) -> Union[None, AchievementPercent]:
         loaded_json = self.__request(f"https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid={game_id}")
