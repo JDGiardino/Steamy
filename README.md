@@ -3,7 +3,23 @@
 This code powers a Discord bot that uses the Steam API to make requests for various game statistics and user data.
 
 ## Bot Setup 
-[IN PROGRESS] Add walkthrough for setup
+
+### Windows Setup
+Step 1) You'll need to install git to preform git commands in the terminal and thus clone this repository.  You can install it [here](https://gitforwindows.org/) and follow the installation keeping everything default. 
+
+Step 2) Next you'll need the latest version of Python.  First, I downloaded and installed from https://www.python.org/.  I also needed to install Python from the Microsoft store which can be accessed simply by typing `python` into the Command Prompt.  This lands you on the following page: 
+![unnamed (1)](https://user-images.githubusercontent.com/14614633/147771455-14ce98fb-5988-438d-bc5d-fd41ca062816.png)
+After installed typing `python` in the command line should show your current Python version
+![unnamed (3)](https://user-images.githubusercontent.com/14614633/147776334-6d6ef956-3dbd-4054-87ef-04973e6cb65c.png)
+
+
+Step 3) Finally you'll need to install pip which can be done by typing `curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py` into the command line.
+
+Step 4) Now you're ready to clone the repository.  Type `git clone https://github.com/JDGiardino/Steamy.git` into the command line and you should see :
+
+<img width="780" alt="Screen Shot 2021-12-30 at 12 25 46 PM" src="https://user-images.githubusercontent.com/14614633/147774473-667cc8dc-ac85-4b60-a6cf-c8bfdeb5d5e5.png">
+
+
 
 
 
