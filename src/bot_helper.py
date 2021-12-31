@@ -1,5 +1,4 @@
 import datetime
-import itertools
 
 from src.exceptions import GameIsNoneError, UserIsNoneError, ExceedingTopGamesMax, GameHasNoAchievements
 from src.steam_api import SteamApi
@@ -53,10 +52,12 @@ def users_game_stats(user: str, game_name: str) -> Stats:
     description1 = f"[{user}]({steam_api.get_user_url(user)}) has a total of {total_hours} hours " \
                    f"played on [{game_name}]({steam_api.get_game_url(game_id)})! "
     player_achievements = steam_api.get_player_achievements(user_id, game_id)
-    if player_achievements == 0:
+    if player_achievements == 'No_Game':
         description2 = f"[{user}]({steam_api.get_user_url(user)}) has unlocked 0 achievements"
-    elif player_achievements == 1:
+    elif player_achievements == 'No_Achievements':
         description2 = f"[{game_name}]({steam_api.get_game_url(game_id)}) does not have any achievements to unlock."
+    elif player_achievements == 'Private_Profile':
+        description2 = f"[{user}]({steam_api.get_user_url(user)}) has their unlocked achievements private."
     else:
         description2 = f"[{user}]({steam_api.get_user_url(user)}) has unlocked " \
                        f"[{player_achievements.unlocked}/{player_achievements.total} achievements]" \

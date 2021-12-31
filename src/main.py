@@ -80,7 +80,7 @@ def main():
                                   color=discord.Colour.blue())
             embed.set_thumbnail(url=f"{stats.icon}")
             await ctx.send(embed=embed)
-        except GameIsNoneError as exc:
+        except (GameIsNoneError, UserIsNoneError) as exc:
             await ctx.send(exc)
 
     @bot.command(
