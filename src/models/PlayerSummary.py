@@ -32,8 +32,6 @@ class PlayerSummary:
     # visible. Mike Blaszczak's post on Steam forums says, "The community visibility state this API returns is
     # different than the privacy state. It's the effective visibility state from the account making the request to
     # the account being viewed given the requesting account's relationship to the viewed account."
-    lastlogoff: int
-    # The last time the user was online, in unix time.
     avatarhash: str
     primaryclanid: str
     # The player's primary group, as configured in their Steam Community profile.
@@ -42,6 +40,8 @@ class PlayerSummary:
     personastateflags: int
     commentpermission: Optional[int] = field(default=None) # Using defaults for optional fields that may not appear in the API call
     # If set, indicates the profile allows public comments.
+    lastlogoff: Optional[int] = field(default=None)
+    # The last time the user was online, in unix time.
     profilestate: Optional[int] = field(default=None)
     # If set, indicates the user has a community profile configured (will be set to '1')
     realname: Optional[str] = field(default=None)
