@@ -111,7 +111,3 @@ def get_top_x_games(x: int) -> Stats:
             description2 += f'#{top100games.index(game) + 1} {game["name"]}'\
                             f' with {formatter.format_numbers_with_comma(game["player_count"])} players\n'
         return Stats(name=title, description1=description1, description2=description2, icon=steam_api.get_steam_icon())
-
-
-if __name__ == "__main__":
-    rarest_achievement_desc("Fallout 4")
