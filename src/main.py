@@ -91,7 +91,7 @@ def main():
             stats = bot_helper.users_stats(arg)
             embed = discord.Embed(title=f"{stats.name}",
                                   description=f"{stats.description1}\n\n"
-                                          f"{stats.description2}",
+                                              f"{stats.description2}",
                                   color=discord.Colour.blue())
             embed.set_thumbnail(url=f"{stats.icon}")
             await ctx.send(embed=embed)

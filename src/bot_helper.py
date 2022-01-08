@@ -68,7 +68,7 @@ def users_game_stats(user: str, game_name: str) -> Stats:
     return Stats(name=game_name, description1=description1, description2=description2, icon=steam_api.get_game_icon(game_id))
 
 
-def users_stats(user) -> Stats:
+def users_stats(user: str) -> Stats:
     user_id = get_user_id(user)
     if steam_api.get_users_total_playtime(user_id) is None:
         total_playtime = 0
