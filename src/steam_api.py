@@ -82,13 +82,13 @@ class SteamApi(object):
 
     def get_player_achievements(self, user_id: int, game_id: int) -> Union[str, PlayerAchievements]:
         loaded_json = self.__request(f"https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key={self.STEAM_API_KEY}&appid={game_id}&steamid={user_id}")
-        if loaded_json["playerstats"]["error"] in loaded_json is True and loaded_json["playerstats"]["error"] == "Requested app has no stats":
+        if "error" in loaded_json["playerstats"] and loaded_json["playerstats"]["error"] == "Requested app has no stats":
             return 'No_Game'
         # This catches when API returns differently for a game_id passed a the user_id has never played.
-        elif loaded_json["playerstats"]["error"] in loaded_json is True and loaded_json["playerstats"]["error"] == "Profile is not public":
+        elif "error" in loaded_json["playerstats"] and loaded_json["playerstats"]["error"] == "Profile is not public":
             return 'Private_Profile'
         # This catches when API returns differently for a user_id that has achievements not public on their profile.
-        elif loaded_json["playerstats"]["success"] is True and loaded_json["playerstats"]["achievements"] in loaded_json is False:
+        elif loaded_json["playerstats"]["success"] and not "achievements" in loaded_json["playerstats"]:
             return 'No_Achievements'
         else:
             achievements = loaded_json["playerstats"]["achievements"]
