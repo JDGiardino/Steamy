@@ -71,6 +71,7 @@ class SteamApi(object):
             for x in playtime:
                 if x["appid"] == game_id:
                     return Playtime(**x)
+            return None
 
     @staticmethod
     def get_game_icon(game_id: int) -> str:
