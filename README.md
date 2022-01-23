@@ -5,19 +5,31 @@ This code powers a Discord bot that uses the Steam API to make requests for vari
 ## Bot Setup 
 
 ### Windows Setup
-Step 1) You'll need to install git to preform git commands in the terminal and thus clone this repository.  You can install it [here](https://gitforwindows.org/) and follow the installation keeping everything default. 
+Step 1) You'll need to install git to preform git commands in the terminal and thus clone (and future update) this repository.  You can install it [here](https://gitforwindows.org/) and follow the installation keeping everything default. 
 
-Step 2) Next you'll need the latest version of Python.  First, I downloaded and installed from https://www.python.org/.  I also needed to install Python from the Microsoft store which can be accessed simply by typing `python` into the Command Prompt.  This lands you on the following page: 
-![unnamed (1)](https://user-images.githubusercontent.com/14614633/147771455-14ce98fb-5988-438d-bc5d-fd41ca062816.png)
-After installed typing `python` in the command line should show your current Python version
-![unnamed (3)](https://user-images.githubusercontent.com/14614633/147776334-6d6ef956-3dbd-4054-87ef-04973e6cb65c.png)
+Step 2) Next you'll need the latest version of Python from [here](https://www.python.org/downloads/windows/).  Make sure you check off `Add Python to PATH` at the bottom of the installer before proceeding :
+
+![python_installer](https://user-images.githubusercontent.com/14614633/150685352-98169df6-29cf-40cc-90b7-b27d0b9ef3b6.png)
+
+After installed type `python` in the command line to confirm proper setup.  It should show your current Python version:
+![python_commandline](https://user-images.githubusercontent.com/14614633/150685563-a606ea25-f408-43a9-b67a-52a3cc566060.png)
 
 
-Step 3) Finally you'll need to install pip which can be done by typing `curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py` into the command line.
+*Note : If you have Microsoft Store version of Python installed this may cause issues running Poetry later on*
+
+Step 3) Now you'll need to install Poetry which is a dependency management and packaging tool for Python.  Poetry will be how you actually run the code for the Steamy bot.  There's documentation you could follow [here](https://python-poetry.org/docs/), or you can simply : 
+* Download the script from [here](https://install.python-poetry.org) 
+* Open the command line and change directories via `cd` to where the script was installed (usually `cd desktop`)
+* Execute the file with `python install-poetry.py` ![install-poetry](https://user-images.githubusercontent.com/14614633/150686354-9391fd26-57ba-428c-aaaf-4af137a75818.png)
+* As the installation print out on the terminal states, you'll need to add the Poetry directory as an environment variable in your PATH.  Go to `View advanced system settings` > `Environment Variables...` and find `Path` under `System variables`.  Edit `Path` > Click `New` > and paste the Poetry bin directory specified in the installation print out on your terminal:  ![poetry_to_PATH](https://user-images.githubusercontent.com/14614633/150686925-69936ee6-7fca-42fa-9b93-9427a208609b.jpg)
+
+You can confirm success of these steps by opening a new terminal and typing `poetry --version`, which should show your Poetry version without any errors.  
 
 Step 4) Now you're ready to clone the repository.  Type `git clone https://github.com/JDGiardino/Steamy.git` into the command line and you should see :
 
 <img width="780" alt="Screen Shot 2021-12-30 at 12 25 46 PM" src="https://user-images.githubusercontent.com/14614633/147774473-667cc8dc-ac85-4b60-a6cf-c8bfdeb5d5e5.png">
+
+Step 5) 
 
 
 
