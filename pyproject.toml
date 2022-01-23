@@ -25,7 +25,3 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 start-steamy = "main:main"
 #find out how to do end-steamy
-
-# either installing poetry or a script that runs requirements.txt via pip install but installs them not to system create a VM specifically for steamy
-# install poetry, clone the repo, poetry run steamy
-# research best practice distributable python code
