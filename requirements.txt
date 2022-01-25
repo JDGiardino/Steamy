@@ -1,7 +1,0 @@
-requests == 2.26.0
-steamclient == 1.2
-gevent == 21.8.0
-eventemitter == 0.2.0
-google == 3.0.0
-valve == 0.0.0
-discord == 1.7.3
