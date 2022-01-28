@@ -29,9 +29,9 @@ class TestGetGame:
     @staticmethod
     def test_when_a_game_exists():
         """Testing the get_game function for when a game is passed that exists within the response.text"""
-        mock_response = unittest.mock.Mock()
+        mock_response = unittest.mock.Mock(spec=["text"])
         mock_response.text = '{"applist":{"apps":[{"appid":1,"name":"joes_game"},{"appid":2,"name":"nicholas_game"}]}}'
-        mock_request_client = unittest.mock.Mock()
+        mock_request_client = unittest.mock.Mock(spec=["request"])
         mock_request_client.request.return_value = mock_response
 
         steam_api = SteamApi(mock_request_client)
@@ -43,9 +43,9 @@ class TestGetGame:
     @staticmethod
     def test_when_a_game_doesnt_exist():
         """Testing the get_game function for when a game is passed that DOES NOT exist within the response.text"""
-        mock_response = unittest.mock.Mock()
+        mock_response = unittest.mock.Mock(spec=["text"])
         mock_response.text = '{"applist":{"apps":[{"appid":1,"name":"joes_game"},{"appid":2,"name":"nicholas_game"}]}}'
-        mock_request_client = unittest.mock.Mock()
+        mock_request_client = unittest.mock.Mock(spec=["request"])
         mock_request_client.request.return_value = mock_response
 
         steam_api = SteamApi(mock_request_client)
@@ -59,9 +59,9 @@ class TestGetAchievementPercent:
     @staticmethod
     def test_when_a_game_doesnt_have_achievements():
         """Testing the get_achievement_percent function for when a game is passed that DOES NOT have any achievements"""
-        mock_response = unittest.mock.Mock()
+        mock_response = unittest.mock.Mock(spec=["text"])
         mock_response.text = '{}'
-        mock_request_client = unittest.mock.Mock()
+        mock_request_client = unittest.mock.Mock(spec=["request"])
         mock_request_client.request.return_value = mock_response
 
         steam_api = SteamApi(mock_request_client)
@@ -74,10 +74,10 @@ class TestGetAchievementPercent:
     @staticmethod
     def test_when_a_game_has_achievements():
         """Testing the get_achievement_percent function for when a game is passed that has achievements"""
-        mock_response = unittest.mock.Mock()
+        mock_response = unittest.mock.Mock(spec=["text"])
         mock_response.text = '{"achievementpercentages":{"achievements":[{"name":"NEW_ACHIEVEMENT_3_22",' \
                              '"percent":74.69},{"name":"NEW_ACHIEVEMENT_4_29","percent":0}]}} '
-        mock_request_client = unittest.mock.Mock()
+        mock_request_client = unittest.mock.Mock(spec=["request"])
         mock_request_client.request.return_value = mock_response
 
         steam_api = SteamApi(mock_request_client)
@@ -90,14 +90,14 @@ class TestGetAchievementPercent:
 class TestGetAchievementDetails:
     @staticmethod
     def test_returning_achievement_details():
-        mock_response = unittest.mock.Mock()
+        mock_response = unittest.mock.Mock(spec=["text"])
         mock_response.text = '{"game":{"gameName":"Halo Infinite","gameVersion":"11","availableGameStats":{' \
                              '"achievements":[{"name":"NEW_ACHIEVEMENT_3_22","defaultvalue":0,"displayName":"Clocking ' \
                              'In","hidden":0,"description":"Complete a Daily Challenge.","icon":"fake_url",' \
                              '"icongray":"fake_url"},{"name":"NEW_ACHIEVEMENT_4_29","defaultvalue":0,' \
                              '"displayName":"MEDIC!","hidden":0,"description":"Revive 3 allies in a matchmade ' \
                              'Elimination round.","icon":"fake_url","icongray":"fake_url"}]}}} '
-        mock_request_client = unittest.mock.Mock()
+        mock_request_client = unittest.mock.Mock(spec=["request"])
         mock_request_client.request.return_value = mock_response
 
         steam_api = SteamApi(mock_request_client)
@@ -116,9 +116,9 @@ class TestGetGamePlaytimes:
     @staticmethod
     def test_when_user_has_no_played_games():
         """Testing when get_game_playtimes function has a user passed that's never played a game on Steam"""
-        mock_response = unittest.mock.Mock()
+        mock_response = unittest.mock.Mock(spec=["text"])
         mock_response.text = '{"response":{}}'
-        mock_request_client = unittest.mock.Mock()
+        mock_request_client = unittest.mock.Mock(spec=["request"])
         mock_request_client.request.return_value = mock_response
 
         steam_api = SteamApi(mock_request_client)
@@ -131,12 +131,12 @@ class TestGetGamePlaytimes:
     @staticmethod
     def test_when_user_has_played_a_game():
         """Testing when get_game_playtimes function has a game passed that the given user has played"""
-        mock_response = unittest.mock.Mock()
+        mock_response = unittest.mock.Mock(spec=["text"])
         mock_response.text = '{"response":{"game_count":256,"games":[{"appid":35700,"playtime_forever":271,' \
                              '"playtime_windows_forever":0,"playtime_mac_forever":0,"playtime_linux_forever":0}, ' \
                              '{"appid":1240440,"playtime_2weeks":735,"playtime_forever":4496,' \
                              '"playtime_windows_forever":4496,"playtime_mac_forever":0,"playtime_linux_forever":0}]}} '
-        mock_request_client = unittest.mock.Mock()
+        mock_request_client = unittest.mock.Mock(spec=["request"])
         mock_request_client.request.return_value = mock_response
 
         steam_api = SteamApi(mock_request_client)
@@ -152,12 +152,12 @@ class TestGetGamePlaytimes:
     def test_when_user_has_not_played_a_game():
         """Testing when get_game_playtimes function has a game passed that the given user has not played"""
 
-    mock_response = unittest.mock.Mock()
+    mock_response = unittest.mock.Mock(spec=["text"])
     mock_response.text = '{"response":{"game_count":256,"games":[{"appid":35700,"playtime_forever":271,' \
                          '"playtime_windows_forever":0,"playtime_mac_forever":0,"playtime_linux_forever":0}, ' \
                          '{"appid":1240440,"playtime_2weeks":735,"playtime_forever":4496,' \
                          '"playtime_windows_forever":4496,"playtime_mac_forever":0,"playtime_linux_forever":0}]}} '
-    mock_request_client = unittest.mock.Mock()
+    mock_request_client = unittest.mock.Mock(spec=["request"])
     mock_request_client.request.return_value = mock_response
 
     steam_api = SteamApi(mock_request_client)
@@ -195,9 +195,9 @@ class TestGetPlayerAchievements:
     @staticmethod
     def test_when_requested_app_has_no_stats():
         """Testing when get_player_achievements function has a game passed for a user that the user has not played"""
-        mock_response = unittest.mock.Mock()
+        mock_response = unittest.mock.Mock(spec=["text"])
         mock_response.text = '{"playerstats":{"error":"Requested app has no stats","success":false}}'
-        mock_request_client = unittest.mock.Mock()
+        mock_request_client = unittest.mock.Mock(spec=["request"])
         mock_request_client.request.return_value = mock_response
 
         steam_api = SteamApi(mock_request_client)
@@ -210,9 +210,9 @@ class TestGetPlayerAchievements:
     @staticmethod
     def test_when_profile_is_not_public():
         """Testing when get_player_achievements function has a user passed with a public profile set"""
-        mock_response = unittest.mock.Mock()
+        mock_response = unittest.mock.Mock(spec=["text"])
         mock_response.text = '{"playerstats":{"error":"Profile is not public","success":false}}'
-        mock_request_client = unittest.mock.Mock()
+        mock_request_client = unittest.mock.Mock(spec=["request"])
         mock_request_client.request.return_value = mock_response
 
         steam_api = SteamApi(mock_request_client)
@@ -225,9 +225,9 @@ class TestGetPlayerAchievements:
     @staticmethod
     def test_when_user_has_no_achievements():
         """Testing when get_player_achievements function has a game passed that has no unlockable achievements"""
-        mock_response = unittest.mock.Mock()
+        mock_response = unittest.mock.Mock(spec=["text"])
         mock_response.text = '{"playerstats":{"steamID":"76561198094936897","gameName":"Valheim","success":true}}'
-        mock_request_client = unittest.mock.Mock()
+        mock_request_client = unittest.mock.Mock(spec=["request"])
         mock_request_client.request.return_value = mock_response
 
         steam_api = SteamApi(mock_request_client)
@@ -242,9 +242,9 @@ class TestGetUsersTotalPlaytime:
     @staticmethod
     def test_when_user_has_no_played_games():
         """Testing when get_users_total_playtime function has a user passed that's never played a game on Steam"""
-        mock_response = unittest.mock.Mock()
+        mock_response = unittest.mock.Mock(spec=["text"])
         mock_response.text = '{"response":{}}'
-        mock_request_client = unittest.mock.Mock()
+        mock_request_client = unittest.mock.Mock(spec=["request"])
         mock_request_client.request.return_value = mock_response
 
         steam_api = SteamApi(mock_request_client)
@@ -256,12 +256,12 @@ class TestGetUsersTotalPlaytime:
     @staticmethod
     def test_when_user_has_played_games():
         """Testing when get_users_total_playtime function has a user passed that has played a game(s) on Steam"""
-        mock_response = unittest.mock.Mock()
+        mock_response = unittest.mock.Mock(spec=["text"])
         mock_response.text = '{"response":{"game_count":2,"games":[{"appid":1593500,"playtime_2weeks":3,' \
                              '"playtime_forever":3,"playtime_windows_forever":3,"playtime_mac_forever":0,' \
                              '"playtime_linux_forever":0},{"appid":1240440,"playtime_forever":358,' \
                              '"playtime_windows_forever":358,"playtime_mac_forever":0,"playtime_linux_forever":0}]}} '
-        mock_request_client = unittest.mock.Mock()
+        mock_request_client = unittest.mock.Mock(spec=["request"])
         mock_request_client.request.return_value = mock_response
 
         steam_api = SteamApi(mock_request_client)
@@ -274,9 +274,9 @@ class TestGetUsersTotalPlaytime:
 class TestGetPlayers:
     @staticmethod
     def test_when_valid_game_passed():
-        mock_response = unittest.mock.Mock()
+        mock_response = unittest.mock.Mock(spec=["text"])
         mock_response.text = '{"response":{"player_count":119140,"result":1}}'
-        mock_request_client = unittest.mock.Mock()
+        mock_request_client = unittest.mock.Mock(spec=["request"])
         mock_request_client.request.return_value = mock_response
 
         steam_api = SteamApi(mock_request_client)

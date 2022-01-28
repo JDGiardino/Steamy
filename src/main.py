@@ -26,7 +26,7 @@ def main():
         embed.add_field(name='$user USER NAME',
                         value='Prints a given user\'s total played hours on Steam', inline=False)
         embed.add_field(name='$game GAME NAME',
-                        value='Prints the current player count for a given game', inline=False)
+                        value='Prints the current player count and ranking by player for a given game', inline=False)
         embed.add_field(name='$top NUMBER',
                         value='Prints the top X played games of a given number up to 100', inline=False)
         embed.add_field(name='$users_game "USER NAME" "GAME NAME"',
