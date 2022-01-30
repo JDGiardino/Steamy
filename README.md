@@ -17,12 +17,12 @@ Ready to set up Steamy on your Discord server?  You can follow the bot setup doc
 Interested in making a code change or suggesting improvements?  Contributions to the Steamy project are more than welcomed!  All changes follow a pull request and approval based flow.  To contribute to the project you can either :
 * Fork the repository and create a pull request on your fork against this repository [(documentation on how to do this)](https://kbroman.org/github_tutorial/pages/fork.html).
 * Request contributor access 
-* Create an Issue for your suggested change
+* [Create an Issue for your suggested change](https://github.com/JDGiardino/Steamy/issues)
 
 ## Errors
 Running into issues setting up Steamy?  Seeing unexpected error from commands?  Is something unclear?  
 
-Feel free to create a Github issue detailing the problem!
+Feel free to [create a Github issue](https://github.com/JDGiardino/Steamy/issues) detailing the problem!
 
 
 ## Bot Commands
