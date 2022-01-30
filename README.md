@@ -1,14 +1,26 @@
 # Steamy
 
-This code powers a Discord bot that uses the Steam API to make requests for various game statistics and user data.
+<p align="center">
+  <img src= https://user-images.githubusercontent.com/14614633/151686740-e5824db3-89a0-4300-9c7e-1607a7fabfe4.jpg alt="Steam/Dsicord Image"/>
+</p>
 
-## Bot Setup 
-[IN PROGRESS] Add walkthrough for setup
+
+## Overview
+Steamy is a Discord bot that uses the Steam API to post various game statistics and user data.  A full list of features of the bot can be found in the [Bot Commands section](#bot-commands). The bot is self-hosted and so requires setup before you can connect it to your Discord server and run it.  
+
+## Get Started  
+Ready to set up Steamy on your Discord server?  You can follow the bot setup documentation here :
+* [Windows Setup](https://github.com/JDGiardino/Steamy/wiki/Bot-Setup-(Windows))
+* Mac Setup (Coming Soon)
+
+## Contributing
+Interested in making a code change or suggesting improvements? 
+
 
 
 
 ## Bot Commands
-The following lists all the commands Steamy bot can preform and examples of their output:
+For a list and breif description for all Steamy commands see below :
 - `$achievement GAME_NAME` - This command posts to the server the rarest achievement for the given game name.
 - `$game GAME_NAME` - This command posts to the server the player count and rank in top played games for the given game name.
 - `$help` - This command sends a direct message to user who called it, with a list of all commands Steamy can preform. 
