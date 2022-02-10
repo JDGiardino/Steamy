@@ -73,9 +73,18 @@ def users_stats(user: str) -> Stats:
     if steam_api.get_users_total_playtime(user_id) is None:
         total_playtime = 0
     else:
-        total_playtime = formatter.format_users_total_playtime(steam_api.get_users_total_playtime(user_id))
+        total_playtime = formatter.format_users_playtime(steam_api.get_users_total_playtime(user_id))
+    if steam_api.get_users_two_week_playtime(user_id) is None:
+        two_week_playtime = 0
+        two_week_games_string = "And so has not played any games recently"
+    else:
+        two_week_stats = steam_api.get_users_two_week_playtime(user_id)
+        two_week_playtime = formatter.format_users_playtime(two_week_stats.two_week_playtime)
+        two_week_games_string = f"Recently playing the following games: {two_week_stats.two_week_games}"
     player_summary = steam_api.get_player_summaries(user_id)
-    description1 = f"[{user}]({player_summary.profileurl}) has a grand total of {total_playtime} hours played on Steam!"
+    description1 = f"[{user}]({player_summary.profileurl}) has a grand total of {total_playtime} hours played on Steam!\n" \
+                   f"[{user}]({player_summary.profileurl}) has {two_week_playtime} hours played in the last 2 weeks\n" \
+                   #f"{two_week_games_string}."
     description2 = f"[{user}]({player_summary.profileurl})'s profile was created on " \
                    f"{datetime.datetime.fromtimestamp(player_summary.timecreated)}"
     return Stats(name=user, description1=description1, description2=description2, icon=player_summary.avatarfull)

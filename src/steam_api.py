@@ -2,10 +2,12 @@ import steam
 import json
 import os
 
+from cachetools import cached, TTLCache
 from typing import Union, Optional
 from src.models.AchievementPercent import AchievementPercent
 from src.models.AchievementDetails import AchievementDetails
 from src.models.PlayerAchievements import PlayerAchievements
+from src.models.TwoWeekStats import TwoWeekStats
 from src.models.PlayerSummary import PlayerSummary
 from src.models.Game import Game
 from src.models.Players import Players
@@ -112,6 +114,20 @@ class SteamApi(object):
                 total_playtime += x["playtime_forever"]
             return total_playtime
 
+    def get_users_two_week_stats(self, user_id: int) -> Union[None, TwoWeekStats]: # add tests
+        loaded_json = self.__request(
+            f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={self.STEAM_API_KEY}&steamid={user_id}&format=json")
+        playtime = loaded_json["response"].get("games")
+        if playtime is None:
+            return None  # This catches if the json object does not have the assumed nested items
+        two_week_playtime = 0
+        two_week_games = []
+        for x in playtime:
+            if "playtime_2weeks" in x:
+                two_week_playtime += x["playtime_2weeks"]
+                two_week_games.append(x["appid"])
+        return TwoWeekStats(two_week_playtime=two_week_playtime, two_week_games=two_week_games)
+
     def get_player_summaries(self, user_id: int) -> PlayerSummary:
         loaded_json = self.__request(f"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={self.STEAM_API_KEY}&steamids={user_id}")
         return PlayerSummary(**loaded_json["response"]["players"][0])
@@ -122,6 +138,7 @@ class SteamApi(object):
         x = loaded_json["response"]
         return Players(**x)
 
+    @cached(cache=TTLCache(maxsize=33, ttl=100))
     def get_top_100_games(self) -> list[dict[str: str]]:
         top_100_in_2_weeks = self.__request(f"https://steamspy.com/api.php?request=top100in2weeks").values()
         # .values() turns the returned dict into a list

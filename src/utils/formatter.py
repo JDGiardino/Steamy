@@ -8,7 +8,7 @@ def format_users_game_playtime(game_playtime: int) -> str:
     return format_numbers_with_comma(round(total_hours, 2))
 
 
-def format_users_total_playtime(total_playtime: float) -> str:
+def format_users_playtime(total_playtime: float) -> str:
     total_hours = total_playtime / 60
     return format_numbers_with_comma(round(total_hours, 2))
 
