@@ -45,6 +45,12 @@ class SteamApi(object):
                 return Game(**x)
         return None
 
+    def get_game_name(self, game_id: int) -> str:
+        json_app_list = self.__request("https://api.steampowered.com/ISteamApps/GetAppList/v0002/")
+        for x in json_app_list["applist"]["apps"]:
+            if game_id == x['appid']:
+                return x['name']
+
     def get_achievement_percent(self, game_id: int) -> Union[None, AchievementPercent]:
         loaded_json = self.__request(f"https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid={game_id}")
         if loaded_json == {}:
@@ -121,11 +127,14 @@ class SteamApi(object):
         if playtime is None:
             return None  # This catches if the json object does not have the assumed nested items
         two_week_playtime = 0
-        two_week_games = []
+        two_week_game_ids = []
         for x in playtime:
             if "playtime_2weeks" in x:
                 two_week_playtime += x["playtime_2weeks"]
-                two_week_games.append(x["appid"])
+                two_week_game_ids.append(x["appid"])
+        two_week_games = []
+        for x in two_week_game_ids:
+            two_week_games.append(self.get_game_name(x))
         return TwoWeekStats(two_week_playtime=two_week_playtime, two_week_games=two_week_games)
 
     def get_player_summaries(self, user_id: int) -> PlayerSummary:

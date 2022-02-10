@@ -16,3 +16,9 @@ def format_users_playtime(total_playtime: float) -> str:
 def format_numbers_with_comma(number: int) -> str:
     formatted_number = "{:,}".format(number)
     return formatted_number
+
+
+def format_list_into_a_string(alist: list) -> str:
+    format_list = ['{:>3}' for item in alist]
+    s = ', '.join(format_list)
+    return s.format(*alist)
