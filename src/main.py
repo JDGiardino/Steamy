@@ -17,12 +17,12 @@ def main():
     @bot.command()
     async def help(ctx):
         embed = discord.Embed(title="Steamy Commands",
-                              url="https://github.com/JDGiardino/Steamy/blob/main/README.md",
+                              url="https://github.com/JDGiardino/Steamy/wiki/Bot-Commands",
                               description="Below are the exact Steamy commands you can use in-channel :",
                               color=discord.Colour.blue())
         embed.set_thumbnail(url="https://imgur.com/KtPxVZS.jpeg")
         embed.add_field(name='$achievement GAME NAME',
-                        value='Prints the least unlocked achievement for a given game', inline=False)
+                        value='Prints the globally least unlocked achievement for a given game', inline=False)
         embed.add_field(name='$user USER NAME',
                         value='Prints a given user\'s total played hours on Steam', inline=False)
         embed.add_field(name='$game GAME NAME',
