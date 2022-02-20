@@ -91,15 +91,16 @@ class SteamApi(object):
 
     def get_player_achievements(self, user_id: int, game_id: int) -> Union[str, PlayerAchievements]:
         loaded_json = self.__request(f"https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key={self.STEAM_API_KEY}&appid={game_id}&steamid={user_id}")
-        if "error" in loaded_json["playerstats"] and loaded_json["playerstats"]["error"] == "Requested app has no stats":
-            return 'No_Game'
-        # This catches when API returns differently for a game_id passed a the user_id has never played.
-        elif "error" in loaded_json["playerstats"] and loaded_json["playerstats"]["error"] == "Profile is not public":
-            return 'Private_Profile'
+        if "error" in loaded_json["playerstats"] and loaded_json["playerstats"]["error"] == "Profile is not public":
+            return PlayerAchievements(unlocked=0, total=1, status='Private_Profile')
         # This catches when API returns differently for a user_id that has achievements not public on their profile.
-        elif loaded_json["playerstats"]["success"] and not "achievements" in loaded_json["playerstats"]:
-            return 'No_Achievements'
+        elif loaded_json["playerstats"]["success"] and "achievements" not in loaded_json["playerstats"]:
+            return PlayerAchievements(unlocked=0, total=1, status='No_Achievements')
+        elif "error" in loaded_json["playerstats"] and loaded_json["playerstats"]["error"] == "Requested app has no stats":
+            return PlayerAchievements(unlocked=0, total=1)
+        # This catches when API returns differently for a game_id passed a the user_id has never played.
         else:
+            game_name = loaded_json["playerstats"]["gameName"]
             achievements = loaded_json["playerstats"]["achievements"]
             unlocked = 0
             total = 0
@@ -107,7 +108,7 @@ class SteamApi(object):
                 if x["achieved"] == 1:
                     unlocked += 1
                 total += 1
-            return PlayerAchievements(unlocked=unlocked, total=total,)
+            return PlayerAchievements(game_name=game_name, unlocked=unlocked, total=total)
 
     def get_users_total_playtime(self, user_id: int) -> Union[None, float]:
         loaded_json = self.__request(f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={self.STEAM_API_KEY}&steamid={user_id}&format=json")
@@ -161,6 +162,18 @@ class SteamApi(object):
     def get_game_details(self, game_id: int) -> GameDetails:
         loaded_json = self.__request(f"https://steamspy.com/api.php?request=appdetails&appid={game_id}")
         return GameDetails(**loaded_json)
+
+    def get_perfect_games(self, user_id: int) -> Union[str, dict]:
+        loaded_json = self.__request(f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={self.STEAM_API_KEY}&steamid={user_id}&format=json")
+        games = loaded_json["response"].get("games")
+        perfect_games = {}
+        for game in games:
+            player_achievements = self.get_player_achievements(user_id, game["appid"])
+            if player_achievements.status == 'Private_Profile':
+                return 'Private_Profile'
+            elif player_achievements.unlocked/player_achievements.total == 1:
+                perfect_games[f"{player_achievements.game_name}"] = player_achievements.total
+        return perfect_games
 
     @staticmethod
     def get_game_url(game_id: int) -> str:

@@ -4,6 +4,7 @@ from src.models.AchievementPercent import AchievementPercent
 from src.models.Players import Players
 from src.models.Game import Game
 from src.models.AchievementPercent import AchievementPercent
+from src.models.PlayerAchievements import PlayerAchievements
 from src.models.AchievementDetails import AchievementDetails
 from src.models.Playtime import Playtime
 from src.steam_api import SteamApi
@@ -203,7 +204,7 @@ class TestGetPlayerAchievements:
         steam_api = SteamApi(mock_request_client)
         actual_player_achievements = steam_api.get_player_achievements(76561198094936897,
                                                                        1172620)  # IDs for user "xAmpharosx" and game "Sea of Thieves"
-        expected_player_achievements = 'No_Game'
+        expected_player_achievements = PlayerAchievements(unlocked=0, total=1)
 
         assert actual_player_achievements == expected_player_achievements
 
@@ -218,7 +219,7 @@ class TestGetPlayerAchievements:
         steam_api = SteamApi(mock_request_client)
         actual_player_achievements = steam_api.get_player_achievements(76561198004892682,
                                                                        1172620)  # IDs for user "DGamesta" and game "Sea of Thieves"
-        expected_player_achievements = 'Private_Profile'
+        expected_player_achievements = PlayerAchievements(unlocked=0, total=1, status='Private_Profile')
 
         assert actual_player_achievements == expected_player_achievements
 
@@ -233,7 +234,7 @@ class TestGetPlayerAchievements:
         steam_api = SteamApi(mock_request_client)
         actual_player_achievements = steam_api.get_player_achievements(76561198094936897,
                                                                        892970)  # IDs for user "xAmpharosx" and game "Valheim"
-        expected_player_achievements = 'No_Achievements'
+        expected_player_achievements = PlayerAchievements(unlocked=0, total=1, status='No_Achievements')
 
         assert actual_player_achievements == expected_player_achievements
 

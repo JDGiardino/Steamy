@@ -52,11 +52,11 @@ def users_game_stats(user: str, game_name: str) -> Stats:
     description1 = f"[{user}]({steam_api.get_user_url(user)}) has a total of {total_hours} hours " \
                    f"played on [{game_name}]({steam_api.get_game_url(game_id)})! "
     player_achievements = steam_api.get_player_achievements(user_id, game_id)
-    if player_achievements == 'No_Game':
+    if player_achievements.unlocked == 0:
         description2 = f"[{user}]({steam_api.get_user_url(user)}) has unlocked 0 achievements"
-    elif player_achievements == 'No_Achievements':
+    elif player_achievements.status == 'No_Achievements':
         description2 = f"[{game_name}]({steam_api.get_game_url(game_id)}) does not have any achievements to unlock."
-    elif player_achievements == 'Private_Profile':
+    elif player_achievements.status == 'Private_Profile':
         description2 = f"[{user}]({steam_api.get_user_url(user)}) has their unlocked achievements private."
     else:
         description2 = f"[{user}]({steam_api.get_user_url(user)}) has unlocked " \
@@ -108,7 +108,7 @@ def game_desc(game_name: str) -> Stats:
     return Stats(name=game_name, description1=description1, description2=description2, icon=steam_api.get_game_icon(game_id))
 
 
-def get_top_x_games(x: int) -> Stats:
+def top_x_games(x: int) -> Stats:
     if x > 100:
         raise ExceedingTopGamesMax("Can only search up to a maximum of the top 100 games.")
     else:
@@ -120,3 +120,18 @@ def get_top_x_games(x: int) -> Stats:
             description2 += f'#{top100games.index(game) + 1} {game["name"]}'\
                             f' with {formatter.format_numbers_with_comma(game["player_count"])} players\n'
         return Stats(name=title, description1=description1, description2=description2, icon=steam_api.get_steam_icon())
+
+
+def perfect_games(user: str) -> Stats:
+    user_id = get_user_id(user)
+    player_summary = steam_api.get_player_summaries(user_id)
+    games = steam_api.get_perfect_games(user_id)
+    if games == 'Private_Profile':
+        return Stats(name=user, description1=f"[{user}]({steam_api.get_user_url(user)}) has their unlocked achievements private.", icon=player_summary.avatarfull)
+    else:
+        description1 = f"[{user}]({steam_api.get_user_url(user)}) has perfected {len(games)} games on Steam."
+        if len(games) > 0:
+            description2 = "Those games and their total amount of achievements are: \n"
+            for key in games:
+                description2 += f'   - {key} with a total of {games[key]} achievements \n'
+        return Stats(name=user, description1=description1, icon=player_summary.avatarfull)

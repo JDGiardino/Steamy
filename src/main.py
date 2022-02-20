@@ -118,7 +118,7 @@ def main():
     )
     async def top(ctx, *, arg: int):
         try:
-            stats = bot_helper.get_top_x_games(arg)
+            stats = bot_helper.top_x_games(arg)
             embed = discord.Embed(title=f"{stats.name}",
                                   description=f"{stats.description1}\n\n"
                                               f"{stats.description2}",
@@ -126,6 +126,20 @@ def main():
             embed.set_thumbnail(url=f"{stats.icon}")
             await ctx.send(embed=embed)
         except ExceedingTopGamesMax as exc:
+            await ctx.send(exc)
+
+    @bot.command(
+        name="perfect", description="Prints a user's perfected games"
+    )
+    async def perfect(ctx, *, arg: str):
+        try:
+            stats = bot_helper.perfect_games(arg)
+            embed = discord.Embed(title=f"{stats.name}",
+                                  description=f"{stats.description1}",
+                                  color=discord.Colour.blue())
+            embed.set_thumbnail(url=f"{stats.icon}")
+            await ctx.send(embed=embed)
+        except UserIsNoneError as exc:
             await ctx.send(exc)
 
     @bot.event
