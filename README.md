@@ -21,7 +21,6 @@ Steamy is a Discord bot that uses the Steam API to post various game statistics 
 ## Get Started  
 Ready to set up Steamy on your Discord server?  You can follow the bot setup documentation here :
 * [Windows Setup](https://github.com/JDGiardino/Steamy/wiki/Bot-Setup-(Windows))
-* Mac Setup (Coming Soon)
 
 ## Contributing
 Interested in making a code change or suggesting improvements?  Contributions to the Steamy project are more than welcomed!  All changes follow a pull request and approval based flow.  To contribute to the project you can either :
