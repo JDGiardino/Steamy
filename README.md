@@ -29,6 +29,6 @@ Interested in making a code change or suggesting improvements?  Contributions to
 * [Create an Issue for your suggested change](https://github.com/JDGiardino/Steamy/issues)
 
 ## Errors
-Running into issues setting up Steamy?  Seeing unexpected error from commands?  Is something unclear?  
+Running into issues setting up Steamy?  Seeing unexpected error from commands? 
 
 Feel free to [create a Github issue](https://github.com/JDGiardino/Steamy/issues) detailing the problem!
